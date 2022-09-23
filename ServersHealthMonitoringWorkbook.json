@@ -1,0 +1,761 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Servers Health Metrics Reporting and Analysis"
+      },
+      "name": "text - 0"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "237c8c0d-2046-4d30-b8e3-afeaae3b1ca8",
+            "version": "KqlParameterItem/1.0",
+            "name": "SubscriptionToken",
+            "label": "Subscription",
+            "type": 6,
+            "description": "Choose your subscription in which servers are deployed",
+            "isRequired": true,
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "includeAll": true,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": "/subscriptions/4383ac89-7cd1-48c1-8061-b0b3c5ccfd97"
+          },
+          {
+            "id": "e71540ba-4701-4a13-a8bf-4e8368aa4c82",
+            "version": "KqlParameterItem/1.0",
+            "name": "WorkspaceToken",
+            "label": "Workspace",
+            "type": 5,
+            "description": "Choose Workspace where servers metric reports logs",
+            "isRequired": true,
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": "/subscriptions/4383ac89-7cd1-48c1-8061-b0b3c5ccfd97/resourcegroups/manishsoar/providers/microsoft.operationalinsights/workspaces/soar-workspace-test"
+          },
+          {
+            "id": "057d5b31-cc64-43e0-bea1-d4ace7383e67",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeToken",
+            "label": "Time",
+            "type": 4,
+            "description": "Choose the time range apporpriate for your analysis",
+            "isRequired": true,
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 900000
+                },
+                {
+                  "durationMs": 1800000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 172800000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 2592000000
+                }
+              ],
+              "allowCustom": true
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": {
+              "durationMs": 86400000
+            }
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "links": [
+          {
+            "id": "69a0bde5-898d-4e19-a3d8-b43a709802d7",
+            "cellValue": "selTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Getting Started",
+            "subTarget": "Getting Started",
+            "style": "link"
+          },
+          {
+            "id": "00688b24-ca03-49ae-af5c-5c316887246c",
+            "cellValue": "selTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Overview",
+            "subTarget": "Overview",
+            "style": "link"
+          },
+          {
+            "id": "6c4a2b32-b5e3-4762-815e-1200bb939b16",
+            "cellValue": "selTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Metrics",
+            "subTarget": "Metrics",
+            "style": "link"
+          }
+        ]
+      },
+      "name": "links - 2"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "### The Microsoft Sentinel Solution for Linux server health metric monitoring provides real-time rapid insights and operational visibility into large-scale Unix and Linux environments This solution is designed for Compliance Teams, Architects, Analysts, and Consultants to define and monitor their Server infrastructure.",
+              "style": "info"
+            },
+            "name": "text - 0"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "## Workbook Features\r\n\r\n#### This workbook is designed specifically for infrastructure and security monitoring use cases, and is designed to deploy quickly and provide intelligent investigations into infrastructure problems.\r\n\r\nCentral Visibility Into Operational Health <br>\r\nPerformance and Resource Utilization Analytics <br>\r\nThreshold-Based Alerting using anayltics rules <br>\r\n\r\n",
+              "style": "upsell"
+            },
+            "name": "text - 1"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selTab",
+        "comparison": "isEqualTo",
+        "value": "Getting Started"
+      },
+      "name": "Gettingstartedgroup"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| summarize count() by ObjectName",
+              "size": 4,
+              "title": "Total events received",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "ObjectName",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "count_",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "style": "decimal",
+                      "maximumFractionDigits": 2,
+                      "maximumSignificantDigits": 3
+                    }
+                  }
+                },
+                "showBorder": false,
+                "sortCriteriaField": "count_",
+                "sortOrderField": 1
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "ObjectName",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "count_",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "query - 9"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat\r\n|distinct Computer,OSType\r\n|summarize count() by OSType\r\n|project-rename Count = count_",
+              "size": 4,
+              "title": "Number of servers reporting ",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "OSType",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Count",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "query - 10"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat | where OSType == 'Linux' or OSType == 'Windows' | where Category != 'Azure Monitor Agent'| summarize arg_max(TimeGenerated, *) by SourceComputerId \r\n|extend Last_Heartbeat = TimeGenerated\r\n|project  Computer , OSType , ComputerIP , OSName , RemoteIPCountry , ComputerEnvironment ,Last_Heartbeat\r\n|sort by Last_Heartbeat",
+              "size": 1,
+              "title": "Linux and windows server reporting status",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Computer",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "15ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "OSType",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "12ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "ComputerIP",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "17.2857ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "OSName",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "14.5714ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "RemoteIPCountry",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "21ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "ComputerEnvironment",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "Last_Heartbeat",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "22.1429ch"
+                    }
+                  }
+                ]
+              }
+            },
+            "customWidth": "50",
+            "name": "query - 2",
+            "styleSettings": {
+              "margin": "0px"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf \r\n|where ObjectName  has \"Processor\"  and CounterName has \"% Processor Time\" and InstanceName has \"total\"\r\n|sort by TimeGenerated\r\n|take 10\r\n|summarize max(CounterValue) by Computer\r\n|project-rename Utilization = max_CounterValue\r\n|sort by Utilization",
+              "size": 4,
+              "title": "Current CPU % utilizations of top 10 servers",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "visualization": "tiles",
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Utilization",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                },
+                "showBorder": false
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "Utilization",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "mapSettings": {
+                "locInfo": "LatLong",
+                "sizeSettings": "Utilization",
+                "sizeAggregation": "Sum",
+                "legendMetric": "Utilization",
+                "legendAggregation": "Sum",
+                "itemColorSettings": {
+                  "type": "heatmap",
+                  "colorAggregation": "Sum",
+                  "nodeColorField": "Utilization",
+                  "heatmapPalette": "greenRed"
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "query - 6"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf \r\n|where ObjectName  has \"Memory\" and CounterName has \"% used\"\r\n|sort by TimeGenerated\r\n|take 10\r\n|summarize max(CounterValue) by Computer\r\n|project-rename Utilization = max_CounterValue\r\n|sort by Utilization",
+              "size": 4,
+              "title": "Current Memory % Utilization of top 10 servers ",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Utilization",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "query - 7"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf \r\n|where ObjectName has \"Logical Disk\" and InstanceName has \"total\" and CounterName has \"used\"\r\n|sort by TimeGenerated\r\n|take 10\r\n|summarize max(CounterValue) by Computer\r\n|project-rename Utilization = max_CounterValue\r\n|sort by Utilization",
+              "size": 4,
+              "title": "Current Logical Disk % Utilization of top 10 servers",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Utilization",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "query - 9"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf \r\n|where ObjectName  has \"Processor\"  and CounterName has \"% Processor Time\" and InstanceName has \"total\"\r\n|project TimeGenerated , Computer, CounterValue",
+              "size": 0,
+              "aggregation": 2,
+              "title": "CPU usage (%) over time ",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "timechart",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "CPUCore",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "CounterValue",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "CPUCore",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "CounterValue",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "chartSettings": {
+                "ySettings": {
+                  "min": 0,
+                  "max": 100
+                }
+              }
+            },
+            "name": "query - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf \r\n|where ObjectName  has \"Memory\" and CounterName has \"% used\" \r\n| project TimeGenerated, Computer, CounterName , CounterValue",
+              "size": 0,
+              "title": "Memory usage (%) over time",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "visualization": "timechart",
+              "chartSettings": {
+                "xAxis": "TimeGenerated",
+                "yAxis": [
+                  "CounterValue"
+                ],
+                "group": "Computer",
+                "createOtherGroup": null
+              }
+            },
+            "name": "query - 3"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf \r\n|where ObjectName  has \"System\" and CounterName has \"Processes\"\r\n| project TimeGenerated, Computer , CounterName,CounterValue",
+              "size": 0,
+              "aggregation": 2,
+              "title": "Number of Processes running over time",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "timechart",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "CounterValue",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "CounterValue",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "mapSettings": {
+                "locInfo": "LatLong",
+                "sizeSettings": "CounterValue",
+                "sizeAggregation": "Sum",
+                "legendMetric": "CounterValue",
+                "legendAggregation": "Sum",
+                "itemColorSettings": {
+                  "type": "heatmap",
+                  "colorAggregation": "Sum",
+                  "nodeColorField": "CounterValue",
+                  "heatmapPalette": "greenRed"
+                }
+              }
+            },
+            "name": "query - 4"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf \r\n|where ObjectName  has \"Network\"  and CounterName has \"Transmitted\" or  CounterName has \"Received\"\r\n| where CounterName has \"Bytes\"\r\n|extend value = log10(CounterValue)\r\n| extend data = strcat(Computer, '-', CounterName)\r\n|summarize sum(value) by data, bin(TimeGenerated,5m)",
+              "size": 0,
+              "aggregation": 2,
+              "title": "Network Activity over time (log10)",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "areachart",
+              "chartSettings": {
+                "xAxis": "TimeGenerated",
+                "group": "data",
+                "createOtherGroup": null
+              }
+            },
+            "name": "query - 5"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf \r\n|where ObjectName has \"Logical Disk\"\r\n|extend value = log10(CounterValue)\r\n|extend data = strcat(Computer, '-', CounterName)\r\n|summarize sum(CounterValue) by data, bin(TimeGenerated,1m)",
+              "size": 0,
+              "title": "Logical Disk Consumption over time (log10)",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "areachart"
+            },
+            "name": "query - 8"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selTab",
+        "comparison": "isEqualTo",
+        "value": "Overview"
+      },
+      "name": "Overviewgroup"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "top_linux_CL \r\n| extend RawData = replace_regex(tostring(RawData),@\"\\s+\",\" \")\r\n| extend data = split(tostring(RawData),' ')\r\n|extend PID=data[1],USER=data[2],pctCPU=data[9],pctMEM=data[10],cpuTIME=data[11],Process=data[12]\r\n|where not(USER has \"USER\")\r\n|sort by TimeGenerated\r\n|project TimeGenerated ,Computer ,PID , USER , pctCPU , pctMEM , cpuTIME,Process\r\n|sort by todouble(pctCPU)",
+              "size": 0,
+              "title": "High Resource Consuming Processes ",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "pctCPU",
+                    "formatter": 8,
+                    "formatOptions": {
+                      "min": 0,
+                      "max": 100,
+                      "palette": "red"
+                    }
+                  }
+                ]
+              }
+            },
+            "name": "query - 0"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "disk_linux_CL \r\n|extend RawData = replace_regex(tostring(RawData),@\"\\s+\",\" \")\r\n|extend data = split(tostring(RawData),' ')\r\n|extend FileSystem=data[0],Type=data[1],Size=data[2],Used=data[3],Avail=data[4],Mount=data[10]\r\n|where not(FileSystem has \"FileSystem\")\r\n|sort by TimeGenerated\r\n|project TimeGenerated,Computer ,FileSystem,Type,Size,Used,Avail,Mount",
+              "size": 0,
+              "title": "Disk status of servers",
+              "timeContextFromParameter": "TimeToken",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspaceToken}"
+              ]
+            },
+            "name": "query - 1"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selTab",
+        "comparison": "isEqualTo",
+        "value": "Metrics"
+      },
+      "name": "Metricgroup"
+    }
+  ],
+  "fallbackResourceIds": [
+    "/subscriptions/4383ac89-7cd1-48c1-8061-b0b3c5ccfd97/resourcegroups/manishsoar/providers/microsoft.operationalinsights/workspaces/soar-workspace-test"
+  ],
+  "fromTemplateId": "sentinel-UserWorkbook",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
