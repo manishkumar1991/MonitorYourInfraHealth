@@ -1,0 +1,12 @@
+name: GitHub script Actions Demo
+on: push
+jobs:
+  Example-Actions-Job:
+    name: Exploring script GitHub Actions
+    runs-on: ubuntu-latest
+    steps:
+      # Display the event that triggered the workflow
+      - run: echo "The job was triggered by a ${{ github.event_name }} event."
+      
+      # Information about the repository and branch
+      - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
