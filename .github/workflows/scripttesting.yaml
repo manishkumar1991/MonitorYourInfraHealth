@@ -11,12 +11,12 @@ jobs:
       # Information about the repository and branch
       - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       # Use Action located in https://github.com/actions
-      - name: Get list of modified files
+      - name: Check out repository code
         uses: actions/checkout@v2  
         
       - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
       # Listing changed/modified files
-      - name: Check out repository code
+      - name: Get list of modified files
         id: files
         uses: jitterbit/get-changed-files@v1
         
