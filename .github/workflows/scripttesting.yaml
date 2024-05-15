@@ -11,13 +11,20 @@ jobs:
       # Information about the repository and branch
       - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       # Use Action located in https://github.com/actions
-      - name: Check out repository code
+      - name: Get list of modified files
         uses: actions/checkout@v2  
         
       - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
-      
-      - run: echo "Your repository has been copied to the path ${{ github.workspace }} on the runner." 
+      # Listing changed/modified files
+      - name: Check out repository code
+        id: files
+        uses: jitterbit/get-changed-files@v1
+        
+      - name: Repository Copied to Runner    
+        run: echo "Your repository has been copied to the path ${{ github.workspace }} on the runner." 
       # install trufflehog on runner
-      - run: curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin
+      - name: Install trufflehog on runner      
+        run: curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin
       # check for credential leaks in pushed code
-      - run: trufflehog git --branch ${{ github.ref }} https://github.com/manishkumar1991/MonitorYourInfraHealth
+      - name: Scanning for Credentials     
+        run: trufflehog git --branch ${{ github.ref }} https://github.com/manishkumar1991/MonitorYourInfraHealth
