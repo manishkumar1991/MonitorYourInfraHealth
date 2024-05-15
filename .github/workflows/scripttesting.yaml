@@ -23,14 +23,14 @@ jobs:
       - name: Repository Copied to Runner    
         run: echo "Your repository has been copied to the path ${{ github.workspace }} on the runner."
         
-      # install trufflehog on runner
+      # Install trufflehog on runner
       - name: Install trufflehog on runner      
         run: curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin 
       # Scanning new and modified files   
       - name: Scaning modified and new files
         run : |
           for changed_file in ${{ steps.files.outputs.all }}; do
-              echo "Do something with this ${changed_file}."
+              trufflehog filesystem ${changed_file}
           done          
         
       # check for credential leaks in pushed code
