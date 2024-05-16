@@ -1,20 +1,19 @@
 name: GitHub trufflehog Actions Demo
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
 jobs:
-  Example-Actions-Job:
-    name: Exploring trufflehog GitHub Actions
+  test:
     runs-on: ubuntu-latest
     steps:
-      # Display the event that triggered the workflow
-      - run: echo "The job was triggered by a ${{ github.event_name }} event."
-      
-      # Information about the repository and branch
-      - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      # Use Action located in https://github.com/actions
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}        
-      - name: Secret Scanning
-        uses: trufflesecurity/trufflehog@main    
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Secret Scanning
+      uses: trufflesecurity/trufflehog@main
+      with:
+        extra_args: --only-verified   
