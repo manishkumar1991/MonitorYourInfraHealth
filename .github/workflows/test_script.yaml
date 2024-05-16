@@ -12,8 +12,9 @@ jobs:
       - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       # Use Action located in https://github.com/actions
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}        
       - name: Secret Scanning
-        uses: trufflesecurity/trufflehog@main
-        with:
-          extra_args: --only-verified      
+        uses: trufflesecurity/trufflehog@main    
