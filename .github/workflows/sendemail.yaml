@@ -13,13 +13,14 @@ jobs:
       id: get_author_email
       run: |
         COMMIT_EMAIL=$(git log -1 --pretty=format:'%ae')
+        echo $COMMIT_EMAIL
         
     - name: Get commit author email
       id: get_author_email2
       uses: actions/github-script@v6
       with:
         script: |
-          const commit = await github.repos.getCommit({
+          const commit = await github.rest.repos.getCommit({
             owner: context.repo.owner,
             repo: context.repo.repo,
             ref: context.sha
