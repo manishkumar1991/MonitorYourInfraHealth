@@ -13,10 +13,11 @@ jobs:
       
       # Information about the repository and branch
       - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Checkout code
+        uses: actions/checkout@v2        
       - name: Get commit author email
         id: get_author_email
         run: |
           COMMIT_EMAIL=$(git log -1 --pretty=format:'%ae')
           echo $COMMIT_EMAIL
-      - name: Checkout code
-        uses: actions/checkout@v2   
+ 
