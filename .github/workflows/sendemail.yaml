@@ -35,5 +35,13 @@ jobs:
       - name: Show author email
         id: show_author_email
         run: |
-          echo ${{ steps.get_author_email2.outputs.commit_email }}            
+          echo ${{ steps.get_author_email2.outputs.commit_email }}
+      - name: Send email to author
+        id: notify_email
+        uses: cinotify/github-action@main
+        with:
+          to: '${{ steps.get_author_email2.outputs.commit_email }}'
+          subject: 'testing email test github'
+          body: '<em>This is a notification from GitHub actions.</em>'
+          type: 'text/html'   
  
