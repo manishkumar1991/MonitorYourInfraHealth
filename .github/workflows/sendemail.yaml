@@ -26,4 +26,9 @@ jobs:
             ref: context.sha
           });
           const email = commit.data.commit.author.email;
-          echo $email    
+          core.setOutput('commit_email', email);
+          
+    - name: Show author email
+      id: show author email
+      run: |
+        echo ${{ steps.get_author_email2.outputs.commit_email }}
