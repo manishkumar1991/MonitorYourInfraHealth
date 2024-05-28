@@ -1,34 +1,15 @@
-name: Send Email on Condition
-
+name: GitHub Actions Demo
 on: push
-
 jobs:
-  check-condition-and-send-email:
+  Example-Actions-Job:
+    name: Exploring GitHub Actions
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Get commit author email
-      id: get_author_email
-      run: |
-        COMMIT_EMAIL=$(git log -1 --pretty=format:'%ae')
-        echo $COMMIT_EMAIL
-        
-    - name: Get commit author email
-      id: get_author_email2
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const commit = await github.rest.repos.getCommit({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: context.sha
-          });
-          const email = commit.data.commit.author.email;
-          core.setOutput('commit_email', email);
-          
-    - name: Show author email
-      id: show_author_email
-      run: |
-        echo ${{ steps.get_author_email2.outputs.commit_email }}
+      # Display the event that triggered the workflow
+      - run: echo "The job was triggered by a ${{ github.event_name }} event."
+      
+      # Runner information
+      - run: echo "This job is now running on a ${{ runner.os }} server hosted by GitHub"
+      
+      # Information about the repository and branch
+      - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
