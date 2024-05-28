@@ -1,0 +1,16 @@
+name: Send Email on Condition
+
+on: push
+
+jobs:
+  check-condition-and-send-email:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Get commit author email
+      id: get_author_email
+      run: |
+        COMMIT_EMAIL=$(git log -1 --pretty=format:'%ae')
+        echo "commit_email=${COMMIT_EMAIL}"
