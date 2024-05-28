@@ -26,4 +26,4 @@ jobs:
             ref: context.sha
           });
           const email = commit.data.commit.author.email;
-          core.setOutput('commit_email', email);    
+          echo $email    
