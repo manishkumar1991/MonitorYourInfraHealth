@@ -1,0 +1,26 @@
+name: GitHub Actions Demo
+on: push
+jobs:
+  Example-Actions-Job:
+    name: Exploring GitHub Actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Secret Scanning
+        uses: trufflesecurity/trufflehog@main
+      - name: Send email
+        uses: AlexisMateo/sendmail-action@5
+        with:
+          smtp-server: smtp.office365.com    
+          smtp-server-port: 587
+          auth-user: secretleak
+          auth-password: s8+52*65B|dBD9:Af%7M
+          subject: test subject
+          body: testing body
+          from: secretleak@microsoft.com
+          to: maniskumar@microsoft.com
+          is-tls: false
+          commit-message: true
