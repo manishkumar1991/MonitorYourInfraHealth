@@ -15,28 +15,5 @@ jobs:
       - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Get commit author email
-        id: get_author_email2
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const commit = await github.rest.repos.getCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: context.sha
-            });
-            const email = commit.data.commit.author.email;
-            core.setOutput('commit_email', email);
-      - name: Show author email
-        id: show_author_email
-        run: |
-          echo ${{ steps.get_author_email2.outputs.commit_email }}
-      - name: Send email to author
-        id: notify_email
-        uses: cinotify/github-action@main
-        with:
-          to: '${{ steps.get_author_email2.outputs.commit_email }}'
-          subject: 'testing email test github'
-          body: '<em>This is a notification from GitHub actions.</em>'
-          type: 'text/html'   
- 
+      - name: Secret Scanning
+        uses: trufflesecurity/trufflehog@main
