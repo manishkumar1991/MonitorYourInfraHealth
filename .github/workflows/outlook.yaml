@@ -18,8 +18,8 @@ jobs:
           smtp-server-port: 587
           auth-user: secretleak
           auth-password: s8+52*65B|dBD9:Af%7M
-          subject: test subject
-          body: testing body
+          subject: testsubject
+          body: testingbody
           from: secretleak@microsoft.com
           to: maniskumar@microsoft.com
           is-tls: false
