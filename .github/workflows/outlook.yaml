@@ -17,7 +17,7 @@ jobs:
           smtp-server: smtp.office365.com    
           smtp-server-port: 587
           auth-user: secretleak
-          auth-password: s8+52*65B|dBD9:Af%7M
+          auth-password: $$$$$$$$$
           subject: testsubject
           body: testingbody
           from: secretleak@microsoft.com
