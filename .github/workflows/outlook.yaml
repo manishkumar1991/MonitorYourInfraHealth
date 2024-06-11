@@ -1,5 +1,5 @@
 # This workflow scans the PR for secrets in its commits.
-name: Run ASIM testers on "eco-connector-test" workspace
+name: Scanning Credential in Commits
 on:
   pull_request_target:
     types: [opened, edited, reopened, synchronize, labeled]
