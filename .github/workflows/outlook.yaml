@@ -1,26 +1,27 @@
-name: GitHub Actions Demo
-on: push
-jobs:
-  Example-Actions-Job:
-    name: Exploring GitHub Actions
+# This workflow scans the PR for secrets in its commits.
+name: Run ASIM testers on "eco-connector-test" workspace
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize, labeled]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs: 
+  run-asim-testers:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout pull request branch
+        uses: actions/checkout@v3
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          persist-credentials: false
           fetch-depth: 0
       - name: Secret Scanning
         uses: trufflesecurity/trufflehog@main
-      - name: Send email
-        uses: AlexisMateo/sendmail-action@5
-        with:
-          smtp-server: smtp.office365.com    
-          smtp-server-port: 587
-          auth-user: secretleak
-          auth-password: $$$$$$$$$
-          subject: testsubject
-          body: testingbody
-          from: secretleak@microsoft.com
-          to: maniskumar@microsoft.com
-          is-tls: false
-          commit-message: true
+        
