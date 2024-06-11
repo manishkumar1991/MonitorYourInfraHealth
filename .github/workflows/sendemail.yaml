@@ -1,18 +1,20 @@
-name: GitHub Actions Demo
-on: push
+name: Scanning Credential in Commits
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize, labeled]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
 jobs:
   Example-Actions-Job:
-    name: Exploring GitHub Actions
+    name: Scanning for credentials in commits 
     runs-on: ubuntu-latest
     steps:
       # Display the event that triggered the workflow
-      - run: echo "The job was triggered by a ${{ github.event_name }} event."
-      
-      # Runner information
-      - run: echo "This job is now running on a ${{ runner.os }} server hosted by GitHub"
-      
-      # Information about the repository and branch
-      - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Checkout code
         uses: actions/checkout@v4
         with:
