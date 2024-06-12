@@ -14,6 +14,9 @@ jobs:
     - name: Remove Expection files from the directory
       run: |
         rm -rf secrets.zip
+    - name: List files in the repository-2
+      run: |
+        ls ${{ github.workspace }}         
     - name: Secret Scanning
       uses: trufflesecurity/trufflehog@main    
-    
+   
