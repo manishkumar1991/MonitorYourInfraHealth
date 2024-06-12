@@ -1,5 +1,8 @@
 name: testing filtering
-on: push
+on:
+ pull_request:
+    branches:
+      - main
 jobs:
   testing:
     runs-on: ubuntu-latest
