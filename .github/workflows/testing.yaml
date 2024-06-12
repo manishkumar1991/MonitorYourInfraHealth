@@ -1,0 +1,14 @@
+name: testing filtering
+on: push
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: List files in the repository
+      run: |
+        ls ${{ github.workspace }}
+    
