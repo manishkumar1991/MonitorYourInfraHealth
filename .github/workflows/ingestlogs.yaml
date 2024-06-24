@@ -1,0 +1,30 @@
+name: Ingest sample logs
+
+on: pull_request
+
+jobs:
+  check-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: List commit files
+      id: list-files
+      run: |
+        COMMIT_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+        echo "COMMIT_FILES=$COMMIT_FILES" >> $GITHUB_ENV
+
+    - name: Check for samplelogs file
+      if: contains(env.COMMIT_FILES, 'samplelogs/')
+      run: echo "Found file in samplelogs directory"
+      
+    - name: Print file content with Python
+      if: contains(env.COMMIT_FILES, 'samplelogs/')
+      run: |
+        for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
+          if [[ $file == samplelogs/* ]]; then
+            python3 read_file.py $file
+          fi
+        done
