@@ -12,21 +12,18 @@ jobs:
       with:
         fetch-depth: 0 
         
-    - name: List commit files
-      id: list-files
-      run: |
-        BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
-        COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
-        echo "COMMIT_FILES=${COMMIT_FILES}" >> $GITHUB_ENV
+    - name: Get list of modified files
+      id: files
+      uses: jitterbit/get-changed-files@v1
 
     - name: Check for samplelogs file
-      if: contains(env.COMMIT_FILES, 'samplelogs/')
+      if: contains(${{ steps.files.outputs.all }}, 'samplelogs/')
       run: echo "Found file in samplelogs directory"
       
     - name: Print file content with Python
-      if: contains(env.COMMIT_FILES, 'samplelogs/')
+      if: contains(${{ steps.files.outputs.all }}, 'samplelogs/')
       run: |
-        for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
+        for file in ${{ steps.files.outputs.all }}; do
           if [[ $file == samplelogs/* ]]; then
             python3 .scripts/getdata.py $file
           fi
