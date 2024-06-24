@@ -11,11 +11,12 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0 
-
+        
     - name: List commit files
       id: list-files
       run: |
-        COMMIT_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+        BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+        COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
         echo "COMMIT_FILES=$COMMIT_FILES" >> $GITHUB_ENV
 
     - name: Check for samplelogs file
