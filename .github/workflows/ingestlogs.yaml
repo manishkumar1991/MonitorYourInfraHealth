@@ -17,8 +17,7 @@ jobs:
       run: |
         BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
         COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
-        echo ${{ COMMIT_FILES }}
-        echo $COMMIT_FILES
+        echo "$COMMIT_FILES"
         echo "COMMIT_FILES=$COMMIT_FILES" >> $GITHUB_ENV
 
     - name: Check for samplelogs file
