@@ -12,15 +12,14 @@ jobs:
       with:
         fetch-depth: 0 
         
-    - name: List commit files
+    - name: Fetch commit Files and call ingest script
       id: list-files
       run: |
         BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
         COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
-        echo "$COMMIT_FILES"
-
-    - name: Listing again
-      id: list-again
-      run: |
-        echo "$COMMIT_FILES"
+        for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
+          if [[ $file == samplelogs/* ]]; then
+            python3 .scripts/getdata.py $file
+          fi
+        done	
         
