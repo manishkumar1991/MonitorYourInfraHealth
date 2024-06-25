@@ -22,7 +22,9 @@ jobs:
     - name: Print file content with Python
       run: |
         for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
+          echo "$file"
           if [[ $file == samplelogs/* ]]; then
+            echo "$file" 
             python3 .scripts/getdata.py $file
           fi
         done
