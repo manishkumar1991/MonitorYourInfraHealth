@@ -22,5 +22,5 @@ jobs:
     - name: Listing again
       id: list-again
       run: |
-        echo ${{ steps.list-files.outputs.COMMIT_FILES }}
+        echo "$COMMIT_FILES"
         
