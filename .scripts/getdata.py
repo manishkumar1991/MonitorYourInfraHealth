@@ -23,4 +23,4 @@ if __name__ == "__main__":
     }
     url = "https://management.azure.com/subscriptions/f70efef4-6505-4727-acd8-9d0b3bc0b80e/resourcegroups?api-version=2021-04-01"
     response = requests.get(url, headers=headers)
-    response.json()
+    print(response.json())
