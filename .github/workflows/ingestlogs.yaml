@@ -17,13 +17,8 @@ jobs:
       run: |
         BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
         COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
-
-    - name: Check for samplelogs file
-      if: contains(${{ steps.list-files.outputs.COMMIT_FILES }}, 'samplelogs/')
-      run: echo "Found file in samplelogs directory"
       
     - name: Print file content with Python
-      if: contains(${{ steps.list-files.outputs.COMMIT_FILES }}, 'samplelogs/')
       run: |
         for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
           if [[ $file == samplelogs/* ]]; then
