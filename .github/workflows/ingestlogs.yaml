@@ -19,11 +19,11 @@ jobs:
         COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
 
     - name: Check for samplelogs file
-      if: contains($COMMIT_FILES, 'samplelogs/')
+      if: contains($(echo $COMMIT_FILES), 'samplelogs/')
       run: echo "Found file in samplelogs directory"
       
     - name: Print file content with Python
-      if: contains($COMMIT_FILES, 'samplelogs/')
+      if: contains($(echo $COMMIT_FILES), 'samplelogs/')
       run: |
         for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
           if [[ $file == samplelogs/* ]]; then
