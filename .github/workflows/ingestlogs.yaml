@@ -17,14 +17,17 @@ jobs:
       run: |
         BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
         COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
-        echo "$COMMIT_FILES"
+        echo "COMMIT_FILES=${COMMIT_FILES}" >> $GITHUB_ENV
+
+    - name: Check for samplelogs file
+      if: contains(env.COMMIT_FILES, 'samplelogs/')
+      run: echo "Found file in samplelogs directory"
       
     - name: Print file content with Python
+      if: contains(env.COMMIT_FILES, 'samplelogs/')
       run: |
         for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
-          echo "$file"
           if [[ $file == samplelogs/* ]]; then
-            echo "$file" 
             python3 .scripts/getdata.py $file
           fi
         done
