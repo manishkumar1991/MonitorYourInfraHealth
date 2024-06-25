@@ -27,7 +27,7 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         allow-no-subscriptions: true      
     - name: Fetch commit Files and call ingest script
-      id: Ingest logs
+      id: Ingestlogs
       run: |
         BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
         COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
