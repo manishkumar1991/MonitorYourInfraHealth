@@ -24,6 +24,9 @@ jobs:
             python -m pip install --upgrade pip
             pip install azure-identity
             pip install requests
+            pip install csv
+            pip install json
+            pip install sys
     - name: Login to Azure Public Cloud
       uses: azure/login@v2
       with:
