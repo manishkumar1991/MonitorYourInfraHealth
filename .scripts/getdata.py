@@ -4,7 +4,7 @@ import csv
 import json
 import requests
 
-workspace_id = "YOUR_WORKSPACE_ID"
+workspace_id = "c64eb659-e5d8-4727-a9cd-ea4a085138e6"
 workspaceName = "personal-workspace"
 resourceGroupName = "test_infrastructure"
 subscriptionId = "f70efef4-6505-4727-acd8-9d0b3bc0b80e"
