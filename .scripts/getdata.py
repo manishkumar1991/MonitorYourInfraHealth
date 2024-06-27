@@ -8,6 +8,7 @@ workspace_id = "YOUR_WORKSPACE_ID"
 workspaceName = "personal-workspace"
 resourceGroupName = "test_infrastructure"
 subscriptionId = "f70efef4-6505-4727-acd8-9d0b3bc0b80e"
+dataCollectionEndpointname = "ingestsamplelogs"
 
 lia_supported_builtin_table = ['ADAssessmentRecommendation','ADSecurityAssessmentRecommendation','Anomalies','ASimAuditEventLogs','ASimAuthenticationEventLogs','ASimDhcpEventLogs','ASimDnsActivityLogs','ASimDnsAuditLogs','ASimFileEventLogs','ASimNetworkSessionLogs','ASimProcessEventLogs','ASimRegistryEventLogs','ASimUserManagementActivityLogs','ASimWebSessionLogs','AWSCloudTrail','AWSCloudWatch','AWSGuardDuty','AWSVPCFlow','AzureAssessmentRecommendation','CommonSecurityLog','DeviceTvmSecureConfigurationAssessmentKB','DeviceTvmSoftwareVulnerabilitiesKB','ExchangeAssessmentRecommendation','ExchangeOnlineAssessmentRecommendation','GCPAuditLogs','GoogleCloudSCC','SCCMAssessmentRecommendation','SCOMAssessmentRecommendation','SecurityEvent','SfBAssessmentRecommendation','SharePointOnlineAssessmentRecommendation','SQLAssessmentRecommendation','StorageInsightsAccountPropertiesDaily','StorageInsightsDailyMetrics','StorageInsightsHourlyMetrics','StorageInsightsMonthlyMetrics','StorageInsightsWeeklyMetrics','Syslog','UCClient','UCClientReadinessStatus','UCClientUpdateStatus','UCDeviceAlert','UCDOAggregatedStatus','UCServiceUpdateStatus','UCUpdateAlert','WindowsEvent','WindowsServerAssessmentRecommendation']
 reserved_columns = ["_ResourceId", "id", "_SubscriptionId", "TenantId", "Type", "UniqueId", "Title","_ItemId"]
@@ -67,6 +68,55 @@ def create_table(schema,table):
      url=f"https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/tables/{table}?api-version=2022-10-01"
      return request_object , url , method
 
+def create_dcr(schema,table):
+    dcrname=table+"_DCR"
+    request_object={ 
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources" : [
+        {
+            "type": "Microsoft.Insights/dataCollectionRules", 
+            "name": dcrname, 
+            "apiVersion": "2021-09-01-preview", 
+            "location": "eastus", 			
+            "properties": {
+                "streamDeclarations": {
+                    "Custom-dcringestlogs": {
+                        "columns": json.loads(schema)
+                    }
+                },				
+			"dataCollectionEndpointId": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/dataCollectionEndpoints/{dataCollectionEndpointname}",			
+              "dataSources": {}, 
+              "destinations": { 
+                "logAnalytics": [ 
+                  { 
+                    "workspaceResourceId": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}",
+                    "workspaceId": workspace_id,
+                    "name": "DataCollectionEventCEF" 
+                  } 
+                ] 
+              }, 
+              "dataFlows": [ 
+                    {
+                        "streams": [
+                            "Custom-dcringestlogs"
+                        ],
+                        "destinations": [
+                            "DataCollectionEventCEF"
+                        ],
+                        "transformKql": "source",
+                        "outputStream": f"Custom-{table}"
+                    } 
+                        ] 
+                }
+        }
+                ]
+                    }
+    method="PUT"
+    url=f"https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/dataCollectionRules/{dcrname}?api-version=2022-06-01"
+    return request_object , url , method
+
+
 def get_access_token():
     credential = DefaultAzureCredential()
     token = credential.get_token('https://management.azure.com/.default')
@@ -103,8 +153,17 @@ if __name__ == "__main__":
     print(f"Log ingestion supported: {log_ingestion_supported}\n Table type: {table_type}")
 
     if log_ingestion_supported == True and table_type =="custom_log":
-        # create DCR and table json.dumps(schema_result, indent=4)
+        # create table 
         request_body, url_to_call , method_to_use = create_table(json.dumps(schema_result, indent=4),table_name)
-        print("*****Printing request body*******\n")
+        print("*****Printing request body of table*******\n")
         print(json.dumps(request_body, indent=4))
-        hit_api(url_to_call,request_body,method_to_use)
+        response_body=hit_api(url_to_call,request_body,method_to_use)
+        print(f"Response of table creation: {response_body.status_code}")
+
+        #Once table is created now creating DCR
+        request_body, url_to_call , method_to_use = create_dcr(json.dumps(schema_result, indent=4),table_name)
+        print("*****Printing request body of DCR*******\n")
+        print(json.dumps(request_body, indent=4))      
+        response_body=hit_api(url_to_call,request_body,method_to_use)
+        print(f"Response of DCR creation: {response_body.status_code}")
+        #fetch imutable id which is required for data ingestion
