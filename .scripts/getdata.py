@@ -5,7 +5,7 @@ import json
 import requests
 
 workspace_id = "YOUR_WORKSPACE_ID"
-workspaceName = "YOUR_WORKSPACE_NAME"
+workspaceName = "personal-workspace"
 resourceGroupName = "YOUR_RESOURCE_GROUP_NAME"
 subscriptionId = "YOUR_SUBSCRIPTION_ID"
 
