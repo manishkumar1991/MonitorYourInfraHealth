@@ -24,11 +24,16 @@ def convert_schema_csv_to_json(csv_file):
         for row in reader:
             if row['ColumnName'] in reserved_columns:
                 continue
+            elif row['ColumnType'] == "bool":
+                data.append({        
+                'name': row['ColumnName'],
+                'type': "boolean",
+                })
             else:
                 data.append({        
                 'name': row['ColumnName'],
                 'type': row['ColumnType'],
-                })       
+                })           
     return data
 
 def convert_data_csv_to_json(csv_file):
@@ -70,14 +75,7 @@ def create_table(schema,table):
 
 def create_dcr(schema,table):
     dcrname=table+"_DCR"
-    request_object={ 
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "resources" : [
-        {
-            "type": "Microsoft.Insights/dataCollectionRules", 
-            "name": dcrname, 
-            "apiVersion": "2021-09-01-preview", 
+    request_object={  
             "location": "eastus", 			
             "properties": {
                 "streamDeclarations": {
@@ -110,8 +108,6 @@ def create_dcr(schema,table):
                         ] 
                 }
         }
-                ]
-                    }
     method="PUT"
     url=f"https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/dataCollectionRules/{dcrname}?api-version=2022-06-01"
     return request_object , url , method
@@ -128,8 +124,7 @@ def hit_api(url,request,method):
     "Authorization": f"Bearer {access_token}",
     "Content-Type": "application/json"
     }
-    response = requests.request(method, url, headers=headers, json=request)
-    print(response) 	
+    response = requests.request(method, url, headers=headers, json=request)	
     return response
 
 
@@ -158,12 +153,12 @@ if __name__ == "__main__":
         print("*****Printing request body of table*******\n")
         print(json.dumps(request_body, indent=4))
         response_body=hit_api(url_to_call,request_body,method_to_use)
-        print(f"Response of table creation: {response_body}")
+        print(f"Response of table creation: {response_body.text}")
 
         #Once table is created now creating DCR
         request_body, url_to_call , method_to_use = create_dcr(json.dumps(schema_result, indent=4),table_name)
         print("*****Printing request body of DCR*******\n")
         print(json.dumps(request_body, indent=4))      
         response_body=hit_api(url_to_call,request_body,method_to_use)
-        print(f"Response of DCR creation: {response_body}")
+        print(f"Response of DCR creation: {response_body.text}")
         #fetch imutable id which is required for data ingestion
