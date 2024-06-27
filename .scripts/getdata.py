@@ -85,12 +85,12 @@ def create_dcr(schema,table):
                         "columns": json.loads(schema)
                     }
                 },				
-			"dataCollectionEndpointId": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/dataCollectionEndpoints/{dataCollectionEndpointname}",			
+			"dataCollectionEndpointId": f"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/dataCollectionEndpoints/{dataCollectionEndpointname}",			
               "dataSources": {}, 
               "destinations": { 
                 "logAnalytics": [ 
                   { 
-                    "workspaceResourceId": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}",
+                    "workspaceResourceId": f"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}",
                     "workspaceId": workspace_id,
                     "name": "DataCollectionEventCEF" 
                   } 
