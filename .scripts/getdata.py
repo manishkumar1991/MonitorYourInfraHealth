@@ -80,6 +80,7 @@ def hit_api(url,request,method):
     }
     response = requests.request(method, url, headers=headers, json=request)
     print(response.json())
+    print(response.status_code)
 
 
 if __name__ == "__main__":
