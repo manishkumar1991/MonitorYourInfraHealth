@@ -157,12 +157,12 @@ if __name__ == "__main__":
         print("*****Printing request body of table*******\n")
         print(json.dumps(request_body, indent=4))
         response_body=hit_api(url_to_call,request_body,method_to_use)
-        print(f"Response of table creation: {response_body.status_code}")
+        print(f"Response of table creation: {response_body}")
 
         #Once table is created now creating DCR
         request_body, url_to_call , method_to_use = create_dcr(json.dumps(schema_result, indent=4),table_name)
         print("*****Printing request body of DCR*******\n")
         print(json.dumps(request_body, indent=4))      
         response_body=hit_api(url_to_call,request_body,method_to_use)
-        print(f"Response of DCR creation: {response_body.status_code}")
+        print(f"Response of DCR creation: {response_body}")
         #fetch imutable id which is required for data ingestion
