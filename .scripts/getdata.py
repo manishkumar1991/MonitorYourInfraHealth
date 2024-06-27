@@ -79,7 +79,7 @@ def hit_api(url,request,method):
     "Content-Type": "application/json"
     }
     response = requests.request(method, url, headers=headers, json=request)
-    print(response.json())
+    print(response)
     print(response.status_code)
 
 
