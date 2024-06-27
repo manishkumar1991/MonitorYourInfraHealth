@@ -101,5 +101,6 @@ if __name__ == "__main__":
     if log_ingestion_supported == True and table_type =="custom_log":
         # create DCR and table json.dumps(schema_result, indent=4)
         request_body, url_to_call , method_to_use = create_table(json.dumps(schema_result, indent=4),table_name)
+        print("*****Printing request body*******\n")
         print(json.dumps(request_body, indent=4))
         hit_api(url_to_call,request_body,method_to_use)
