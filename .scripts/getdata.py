@@ -10,7 +10,7 @@ resourceGroupName = "test_infrastructure"
 subscriptionId = "f70efef4-6505-4727-acd8-9d0b3bc0b80e"
 
 lia_supported_builtin_table = ['ADAssessmentRecommendation','ADSecurityAssessmentRecommendation','Anomalies','ASimAuditEventLogs','ASimAuthenticationEventLogs','ASimDhcpEventLogs','ASimDnsActivityLogs','ASimDnsAuditLogs','ASimFileEventLogs','ASimNetworkSessionLogs','ASimProcessEventLogs','ASimRegistryEventLogs','ASimUserManagementActivityLogs','ASimWebSessionLogs','AWSCloudTrail','AWSCloudWatch','AWSGuardDuty','AWSVPCFlow','AzureAssessmentRecommendation','CommonSecurityLog','DeviceTvmSecureConfigurationAssessmentKB','DeviceTvmSoftwareVulnerabilitiesKB','ExchangeAssessmentRecommendation','ExchangeOnlineAssessmentRecommendation','GCPAuditLogs','GoogleCloudSCC','SCCMAssessmentRecommendation','SCOMAssessmentRecommendation','SecurityEvent','SfBAssessmentRecommendation','SharePointOnlineAssessmentRecommendation','SQLAssessmentRecommendation','StorageInsightsAccountPropertiesDaily','StorageInsightsDailyMetrics','StorageInsightsHourlyMetrics','StorageInsightsMonthlyMetrics','StorageInsightsWeeklyMetrics','Syslog','UCClient','UCClientReadinessStatus','UCClientUpdateStatus','UCDeviceAlert','UCDOAggregatedStatus','UCServiceUpdateStatus','UCUpdateAlert','WindowsEvent','WindowsServerAssessmentRecommendation']
-
+reserved_columns = ["_ResourceId", "id", "_SubscriptionId", "TenantId", "Type", "UniqueId", "Title"]
 def read_file(file_path):
     with open(file_path, 'r') as file:
         content = file.read()
@@ -21,10 +21,13 @@ def convert_schema_csv_to_json(csv_file):
     with open(csv_file, 'r',encoding='utf-8-sig') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            data.append({        
-            'name': row['ColumnName'],
-            'type': row['ColumnType'],
-            })       
+            if row['ColumnName'] in reserved_columns:
+                continue
+            else:
+                data.append({        
+                'name': row['ColumnName'],
+                'type': row['ColumnType'],
+                })       
     return data
 
 def convert_data_csv_to_json(csv_file):
