@@ -33,11 +33,5 @@ jobs:
     - name: Fetch commit Files and call ingest script
       id: Ingestlogs
       run: |
-        BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
-        COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
-        for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
-          if [[ $file == samplelogs/* ]]; then
-            python3 .scripts/tests/asimParsersTest/getdata.py $file
-          fi
-        done	
+            python3 .scripts/tests/asimParsersTest/getdata.py	
         
