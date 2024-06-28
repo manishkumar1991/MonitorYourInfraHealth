@@ -37,7 +37,7 @@ jobs:
         COMMIT_FILES=$(git diff --name-only $BASE_SHA ${{ github.sha }})
         for file in $(echo $COMMIT_FILES | tr ' ' '\n'); do
           if [[ $file == samplelogs/* ]]; then
-            python3 .scripts/getdata.py $file
+            python3 .scripts/tests/asimParsersTest/getdata.py $file
           fi
         done	
         
