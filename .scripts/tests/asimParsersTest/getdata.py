@@ -136,3 +136,4 @@ if __name__ == "__main__":
     	except subprocess.CalledProcessError as e:
         	print(f"::error::An error occurred while executing the command: {e}")
         	sys.stdout.flush()  # Explicitly flush stdout
+	print(modified_files)
