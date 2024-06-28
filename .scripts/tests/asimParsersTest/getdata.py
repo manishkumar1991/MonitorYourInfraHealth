@@ -129,36 +129,10 @@ def hit_api(url,request,method):
 
 
 if __name__ == "__main__":
-    file_path = sys.argv[1]
-    #file_path = "samplelogs/CarbonBlackAuditLogs1_CL_Schema.csv"
-    if "Schema" in file_path:
-        print(f"Schema file found at {file_path}")
-        schema_result = convert_schema_csv_to_json(file_path)
-        table_name=file_path.split("/")[-1].split(".")[0].removesuffix("_Schema")
-
-    elif "logs" in file_path:
-        #data_result,table_name = convert_data_csv_to_json('file_path')
-        pass
-    else:
-        #print("Provided file path does not contain schema or logs. Exiting...")
-        #sys.exit(1)
-        pass   
-
-    log_ingestion_supported,table_type=check_for_custom_table(table_name)
-    print(f"Log ingestion supported: {log_ingestion_supported}\n Table type: {table_type}")
-
-    if log_ingestion_supported == True and table_type =="custom_log":
-        # create table 
-        request_body, url_to_call , method_to_use = create_table(json.dumps(schema_result, indent=4),table_name)
-        print("*****Printing request body of table*******\n")
-        print(json.dumps(request_body, indent=4))
-        response_body=hit_api(url_to_call,request_body,method_to_use)
-        print(f"Response of table creation: {response_body.text}")
-
-        #Once table is created now creating DCR
-        request_body, url_to_call , method_to_use = create_dcr(json.dumps(schema_result, indent=4),table_name)
-        print("*****Printing request body of DCR*******\n")
-        print(json.dumps(request_body, indent=4))      
-        response_body=hit_api(url_to_call,request_body,method_to_use)
-        print(f"Response of DCR creation: {response_body.text}")
-        #fetch imutable id which is required for data ingestion
+	current_directory = os.path.dirname(os.path.abspath(__file__))
+	GetModifiedFiles = f"git diff --name-only origin/main {current_directory}/../../../Parsers/"
+	try:
+        	modified_files = subprocess.run(GetModifiedFiles, shell=True, text=True, capture_output=True, check=True)
+    	except subprocess.CalledProcessError as e:
+        	print(f"::error::An error occurred while executing the command: {e}")
+        	sys.stdout.flush()  # Explicitly flush stdout
