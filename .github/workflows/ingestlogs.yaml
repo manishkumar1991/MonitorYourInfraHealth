@@ -1,10 +1,6 @@
 name: Ingest sample logs
 
-on:
-  pull_request_target:
-    types: [opened, edited, reopened, synchronize, labeled]
-    branches:
-      - main
+on: pull_request
 
 permissions:
   id-token: write
@@ -37,5 +33,5 @@ jobs:
     - name: Fetch commit Files and call ingest script
       id: Ingestlogs
       run: |
-            python3 .scripts/tests/asimParsersTest/getdata.py ${{ github.event.number }}
+            python3 .scripts/tests/asimParsersTest/getdata.py
         
