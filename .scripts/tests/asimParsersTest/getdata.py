@@ -20,4 +20,3 @@ if __name__ == "__main__":
 
 # Print the sorted array
     print(sorted_array)
-    print(prnumber)
