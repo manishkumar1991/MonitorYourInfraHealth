@@ -6,7 +6,6 @@ def custom_sort_key(s):
     return (0, s) if 'Schema' in s else (1, s)
 
 if __name__ == "__main__":
-    prnumber = sys.argv[1]
     current_directory = os.path.dirname(os.path.abspath(__file__))
     GetModifiedFiles = f'git diff --name-only origin/main "{current_directory}/../../../Sample Data/ASIM/"'
     try:
