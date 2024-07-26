@@ -1,12 +1,8 @@
 import requests
-import yaml
 import re
 import os
 import subprocess
 import csv
-from datetime import datetime
-from urllib.parse import urlparse
-from tabulate import tabulate
 
 # Constants
 SENTINEL_REPO_RAW_URL = f'https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth'
