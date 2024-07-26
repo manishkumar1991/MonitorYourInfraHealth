@@ -33,4 +33,4 @@ jobs:
     - name: Fetch asim files and check
       id: Ingestlogs
       run: |
-            python3 .scripts/tests/asimParsersTest/getdata.py
+            python3 .scripts/tests/asimParsersTest/checkasim.py
