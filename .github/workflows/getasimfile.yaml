@@ -23,8 +23,9 @@ jobs:
       run: |
             python -m pip install --upgrade pip
             pip install azure-identity
-            pip install requests    
+            pip install requests 
+            pip install PyYAML
     - name: Fetch asim files and check
       id: Ingestlogs
       run: |
-            python3 .scripts/tests/asimParsersTest/checkasim.py
+            python3 .scripts/tests/asimParsersTest/ingestdata.py
