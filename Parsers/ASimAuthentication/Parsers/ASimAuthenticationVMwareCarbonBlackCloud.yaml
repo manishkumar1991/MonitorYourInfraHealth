@@ -1,12 +1,12 @@
 Parser:
   Title: ASIM Authentication parser for VMware Carbon Black Cloud
-  Version: '0.1.0'
+  Version: '0.1.2'
   LastUpdated: Oct 09 2023
 Product:
   Name: VMware Carbon Black Cloud
 Normalization:
   Schema: Authentication
-  Version: '0.1.3'
+  Version: '0.1.4'
 References:
 - Title: ASIM Authentication Schema
   Link: https://aka.ms/ASimAuthenticationDoc
