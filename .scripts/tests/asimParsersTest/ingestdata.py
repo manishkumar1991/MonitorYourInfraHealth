@@ -16,7 +16,7 @@ def get_modified_files(current_directory):
     # Fetch from upstream
     git_fetch_upstream_command = "git fetch upstream"
     subprocess.run(git_fetch_upstream_command, shell=True, text=True, capture_output=True, check=True)
-    cmd = f"git diff --name-only upstream/master {current_directory}/../../../Parsers/"
+    cmd = f"git diff --name-only upstream/main {current_directory}/../../../Parsers/"
     try:
         return subprocess.check_output(cmd, shell=True).decode().split("\n")
     except subprocess.CalledProcessError as e:
@@ -36,7 +36,7 @@ def filter_yaml_files(modified_files):
     return [line for line in modified_files if line.endswith('.yaml')]
 
 
-SentinelRepoUrl = "https://github.com/Azure/Azure-Sentinel.git"
+SentinelRepoUrl = "https://github.com/manishkumar1991/MonitorYourInfraHealth"
 current_directory = os.path.dirname(os.path.abspath(__file__))
 modified_files = get_modified_files(current_directory)
 commit_number = get_current_commit_number()
