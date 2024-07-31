@@ -41,6 +41,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 modified_files = get_modified_files(current_directory)
 commit_number = get_current_commit_number()
 parser_yaml_files = filter_yaml_files(modified_files)
+print(parser_yaml_files)
 print("Following files were found to be modified:")
 for file in parser_yaml_files:
     print(f"{file}")
