@@ -39,4 +39,4 @@ jobs:
     - name: Fetch commit Files and call ingest script
       id: Ingestlogs
       run: |
-            python3 .scripts/tests/asimParsersTest/getdata.py ${{ steps.get_pr_number.outputs.pr_number }}
+            python3 .scripts/tests/asimParsersTest/getdata.py ${{ github.event.pull_request.number }}
