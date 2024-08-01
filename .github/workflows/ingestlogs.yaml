@@ -1,4 +1,4 @@
-name: Ingest sample logs
+name: Ingest asim sample logs
 
 on: pull_request
 
@@ -24,14 +24,19 @@ jobs:
             python -m pip install --upgrade pip
             pip install azure-identity
             pip install requests
+            pip install PyYAML
+            pip install azure-monitor-ingestion
+            pip install azure-core
     - name: Login to Azure Public Cloud
       uses: azure/login@v2
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        allow-no-subscriptions: true      
+        allow-no-subscriptions: true
+    - name: Get PR Number
+      id: get_pr_number
+      run: echo "::set-output name=pr_number::${{ github.event.pull_request.number }}"
     - name: Fetch commit Files and call ingest script
       id: Ingestlogs
       run: |
-            python3 .scripts/tests/asimParsersTest/getdata.py
-        
+            python3 .scripts/tests/asimParsersTest/getdata.py ${{ steps.get_pr_number.outputs.pr_number }}
