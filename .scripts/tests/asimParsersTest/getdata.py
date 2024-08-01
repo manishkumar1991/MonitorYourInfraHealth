@@ -259,4 +259,85 @@ parser_yaml_files = filter_yaml_files(modified_files)
 
 commit_number = get_current_commit_number()
 prnumber = sys.argv[1]
-print(f'************{prnumber}****************')
+
+for file in parser_yaml_files:
+    print(f"Starting ingestion for sample data present in {file}")
+    asim_parser_url = f'{SENTINEL_REPO_RAW_URL}/{commit_number}/{file}'
+    asim_parser = read_github_yaml(asim_parser_url)
+    parser_query = asim_parser.get('ParserQuery', '')
+    event_vendor, event_product, schema_name = extract_event_vendor_product(parser_query, file)
+
+    SampleDataFile = f'{event_vendor}_{event_product}_{schema_name}_IngestedLogs.csv'
+    sample_data_url = f'{SENTINEL_REPO_RAW_URL}/{commit_number}/{SAMPLE_DATA_PATH}'
+    SampleDataUrl = sample_data_url+SampleDataFile
+    response = requests.get(SampleDataUrl)
+    if response.status_code == 200:
+        with open('tempfile.csv', 'wb') as file:
+            file.write(response.content)
+    else:
+        print(f"::error::An error occurred while trying to get content of Sample Data file located at {SampleDataUrl}: {response.text}")
+        continue           
+    data_result,table_name = convert_data_csv_to_json('tempfile.csv')   
+    print(f"Table Name : {table_name}")
+    log_ingestion_supported,table_type=check_for_custom_table(table_name)
+    print(f"Log ingestion supported: {log_ingestion_supported}\n Table type: {table_type}")
+    if log_ingestion_supported == True and table_type =="custom_log":
+        flag=0 #flag value is used to check if DCR is created for the table or not
+        schema_file_name = f"{table_name}_Schema.csv"
+        schemaUrl = sample_data_url+schema_file_name
+        response = requests.get(schemaUrl)
+        if response.status_code == 200:
+            with open('tempfile.csv', 'wb') as file:
+                file.write(response.content)
+        else:
+            print(f"::error::An error occurred while trying to get content of Schema file located at {schemaUrl}: {response.text}")
+            continue        
+        schema_result = convert_schema_csv_to_json('tempfile.csv') 
+        # create table 
+        request_body, url_to_call , method_to_use = create_table(json.dumps(schema_result, indent=4),table_name)
+        response_body=hit_api(url_to_call,request_body,method_to_use)
+        #Once table is created now creating DCR
+        request_body, url_to_call , method_to_use ,stream_name = create_dcr(json.dumps(schema_result, indent=4),table_name,"Custom")  
+        response_body=hit_api(url_to_call,request_body,method_to_use)
+        print(f"Response of DCR creation: {response_body.text}")
+        dcr_directory.append({
+        'DCRname':table_name+'_DCR'+str(prnumber),
+        'imutableid':json.loads(response_body.text).get('properties').get('immutableId'),
+        'stream_name':stream_name
+        })
+        print(dcr_directory)
+        #ingestion start for sending data via DCR
+        for dcr in dcr_directory:
+            if table_name in dcr['DCRname'] and str(prnumber) in dcr['DCRname'] :
+                immutable_id = dcr['imutableid']
+                stream_name = dcr['stream_name']
+                flag=1
+                break 
+        print(f"Ingestion started for {table_name}") 
+        print(f"{immutable_id},{stream_name},{table_name}")      
+        senddtosentinel(immutable_id,data_result,stream_name,flag)
+    elif log_ingestion_supported == True and table_type == "builtin":
+        flag=0 #flag value is used to check if DCR is created for the table or not
+        #create dcr for ingestion
+        schema = get_schema_for_builtin(table_name)
+        request_body, url_to_call , method_to_use ,stream_name = create_dcr(json.dumps(schema, indent=4),table_name,"Microsoft")
+        response_body=hit_api(url_to_call,request_body,method_to_use)
+        print(f"Response of DCR creation: {response_body.text}") 
+        dcr_directory.append({
+        'DCRname':table_name+'_DCR'+str(prnumber),
+        'imutableid':json.loads(response_body.text).get('properties').get('immutableId'),
+        'stream_name':stream_name
+        })
+        print(dcr_directory)
+        for dcr in dcr_directory:
+            if table_name in dcr['DCRname'] and str(prnumber) in dcr['DCRname'] :
+                immutable_id = dcr['imutableid']
+                stream_name = dcr['stream_name']
+                flag=1
+                break
+        print(dcr_directory)    
+        print(f"Ingestion started for {table_name}")       
+        senddtosentinel(immutable_id,data_result,stream_name,flag)
+    else:
+        print(f"Table {table_name} is not supported for log ingestion")
+        continue
