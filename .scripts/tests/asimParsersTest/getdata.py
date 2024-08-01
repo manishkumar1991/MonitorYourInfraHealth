@@ -1,22 +1,262 @@
-import sys
+import requests
+import yaml
+import re
 import os
 import subprocess
+import csv
+import json
+from azure.monitor.ingestion import LogsIngestionClient
+from azure.identity import DefaultAzureCredential
+from azure.core.exceptions import HttpResponseError
+import time
+import sys
 
-def custom_sort_key(s):
-    return (0, s) if 'Schema' in s else (1, s)
 
-if __name__ == "__main__":
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-    GetModifiedFiles = f'git diff --name-only origin/main "{current_directory}/../../../Sample Data/ASIM/"'
+def get_modified_files(current_directory):
+    # Add upstream remote if not already present
+    git_remote_command = "git remote"
+    remote_result = subprocess.run(git_remote_command, shell=True, text=True, capture_output=True, check=True)
+    if 'upstream' not in remote_result.stdout.split():
+        git_add_upstream_command = f"git remote add upstream '{SentinelRepoUrl}'"
+        subprocess.run(git_add_upstream_command, shell=True, text=True, capture_output=True, check=True)
+    # Fetch from upstream
+    git_fetch_upstream_command = "git fetch upstream"
+    subprocess.run(git_fetch_upstream_command, shell=True, text=True, capture_output=True, check=True)
+    cmd = f"git diff --name-only upstream/main {current_directory}/../../../Parsers/"
     try:
-        modified_files = subprocess.run(GetModifiedFiles, shell=True, text=True, capture_output=True, check=True)
-        print(modified_files)
+        return subprocess.check_output(cmd, shell=True).decode().split("\n")
     except subprocess.CalledProcessError as e:
-        print(f"::error::An error occurred while executing the command: {e}")
-        sys.stdout.flush()  # Explicitly flush stdout
-    
-# Sort the array using the custom sort key
-    sorted_array = sorted(modified_files.stdout.splitlines(), key=custom_sort_key)
+        print(f"::error::Error occurred while executing the command: {e}")
+        return []
 
-# Print the sorted array
-    print(sorted_array)
+def get_current_commit_number():
+    cmd = "git rev-parse HEAD"
+    try:
+        return subprocess.check_output(cmd, shell=True, text=True).strip()
+    except subprocess.CalledProcessError as e:
+        print(f"::error::Error occurred while executing the command: {e}")
+        return None
+
+def read_github_yaml(url):
+    try:
+        response = requests.get(url)
+    except Exception as e:
+        print(f"::error::An error occurred while trying to get content of YAML file located at {url}: {e}")
+    return yaml.safe_load(response.text) if response.status_code == 200 else None    
+
+def filter_yaml_files(modified_files):
+    # Take only the YAML files
+    return [line for line in modified_files if line.endswith('.yaml')]
+
+
+def convert_schema_csv_to_json(csv_file):
+    data = []
+    with open(csv_file, 'r',encoding='utf-8-sig') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['ColumnName'] in reserved_columns:
+                continue
+            elif row['ColumnType'] == "bool":
+                data.append({        
+                'name': row['ColumnName'].rsplit("_",1)[0],
+                'type': "boolean",
+                })
+            else:
+                data.append({        
+                'name': row['ColumnName'].rsplit("_",1)[0],
+                'type': row['ColumnType'],
+                })           
+    return data
+
+def convert_data_csv_to_json(csv_file):
+    data = []
+    with open(csv_file, 'r',encoding='utf-8-sig') as file:
+        suffixes = ['_s', '_d','_b','_g']
+        reader = csv.DictReader(file)
+        for row in reader:
+            table_name=row['Type']
+            output_dict = {key[:-2] if any(key.endswith(suffix) for suffix in suffixes) else key: value 
+               for key, value in row.items()}
+            data.append(output_dict)
+        for item in data:
+            for key in list(item.keys()):
+                # If the key matches 'TimeGenerated [UTC]', rename it
+                if key == 'TimeGenerated [UTC]':
+                    item['TimeGenerated'] = item.pop(key)                               
+    return data , table_name
+
+def check_for_custom_table(table_name):
+    if table_name in lia_supported_builtin_table:
+        log_ingestion_supported=True
+        table_type="builtin"
+    if table_name not in lia_supported_builtin_table:
+        if table_name.endswith('_CL') or table_name.endswith('_cl'):
+            log_ingestion_supported=True
+            table_type="custom_log"           
+        else:
+            log_ingestion_supported=False
+            table_type="unknown"
+    return log_ingestion_supported,table_type
+
+def create_table(schema,table):
+     request_object = {
+    "properties": {
+        "schema": {
+        "name": table,
+        "columns": json.loads(schema)
+        },
+        "retentionInDays": 30,
+        "totalRetentionInDays": 30
+    }
+    }
+     method="PUT"
+     url=f"https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/tables/{table}?api-version=2022-10-01"
+     return request_object , url , method
+
+def get_schema_for_builtin(query_table):
+    # Obtain the access token
+    credential = DefaultAzureCredential()
+    token = credential.get_token('https://api.loganalytics.io/.default').token
+    # Set the API endpoint
+    url = f'https://api.loganalytics.io/v1/workspaces/{workspace_id}/query'
+    # Create the payload
+    payload = json.dumps({
+        'query': query_table+'|getschema'
+    })
+    # Set the headers
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    # Make the request
+    query_response = requests.post(url, headers=headers, data=payload)
+    schema=[]
+    for each in json.loads(query_response.text).get('tables')[0].get('rows'):
+        if each[0] in reserved_columns:
+            continue
+        elif each[3] == "bool":
+            schema.append({        
+            'name': each[0],
+            'type': "boolean",
+            })
+        else:
+            schema.append({        
+            'name': each[0],
+            'type': each[3],
+            })
+    return schema
+
+
+def create_dcr(schema,table,table_type):
+    #suffic_num = str(random.randint(100,999))
+    dcrname=table+"_DCR"+str(prnumber)
+    request_object={ 
+            "location": "eastus", 			
+            "properties": {
+                "streamDeclarations": {
+                    "Custom-dcringest"+str(prnumber): {
+                        "columns": json.loads(schema)
+                    }
+                },				
+			"dataCollectionEndpointId": f"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/dataCollectionEndpoints/{dataCollectionEndpointname}",			
+              "dataSources": {}, 
+              "destinations": { 
+                "logAnalytics": [ 
+                  { 
+                    "workspaceResourceId": f"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}",
+                    "workspaceId": workspace_id,
+                    "name": "DataCollectionEvent"+str(prnumber)
+                  } 
+                ] 
+              }, 
+              "dataFlows": [ 
+                    {
+                        "streams": [
+                            "Custom-dcringest"+str(prnumber)
+                        ],
+                        "destinations": [
+                            "DataCollectionEvent"+str(prnumber)
+                        ],
+                        "transformKql": "source",
+                        "outputStream": f"{table_type}-{table}"
+                    } 
+                        ] 
+                }
+        }
+    method="PUT"
+    url=f"https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/dataCollectionRules/{dcrname}?api-version=2022-06-01"
+    return request_object , url , method ,"Custom-dcringest"+str(prnumber)
+
+
+def get_access_token():
+    credential = DefaultAzureCredential()
+    token = credential.get_token('https://management.azure.com/.default')
+    return token.token
+
+def hit_api(url,request,method):
+    access_token = get_access_token()
+    headers = {
+    "Authorization": f"Bearer {access_token}",
+    "Content-Type": "application/json"
+    }
+    response = requests.request(method, url, headers=headers, json=request)
+    return response
+
+def senddtosentinel(immutable_id,data_result,stream_name,flag_status):
+    if flag_status == 0:
+        print("DCR is not created for the table. Please create DCR first")
+        return
+    print("Waiting for data to be sent to sentinel (This will take atleast 20 seconds)")
+    time.sleep(20)
+    credential = DefaultAzureCredential()
+    client = LogsIngestionClient(endpoint=endpoint_uri, credential=credential, logging_enable=True)
+    try:
+        client.upload(rule_id=immutable_id, stream_name=stream_name, logs=data_result)
+    except HttpResponseError as e:
+        print(f"Upload failed: {e}")
+
+
+def extract_event_vendor_product(parser_query,parser_file):
+    match = re.search(r'(ASim\w+)/', parser_file)
+    if match:
+        schema_name = match.group(1)
+    else:
+        print(f'EventVendor field not mapped in parser. Please map it in parser query.{parser_file}')
+
+    match = re.search(r'EventVendor\s*=\s*[\'"]([^\'"]+)[\'"]', parser_query)
+    if match:
+        event_vendor = match.group(1).replace(" ", "")
+    else:
+        print(f'EventVendor field not mapped in parser. Please map it in parser query.{parser_file}')
+
+    match = re.search(r'EventProduct\s*=\s*[\'"]([^\'"]+)[\'"]', parser_query)
+    if match:
+        event_product = match.group(1).replace(" ", "")
+    else:
+        print(f'Event Product field not mapped in parser. Please map it in parser query.{parser_file}')
+    return event_vendor, event_product ,schema_name   
+
+#main starting point of script
+
+workspace_id = "c64eb659-e5d8-4727-a9cd-ea4a085138e6"
+workspaceName = "personal-workspace"
+resourceGroupName = "test_infrastructure"
+subscriptionId = "f70efef4-6505-4727-acd8-9d0b3bc0b80e"
+dataCollectionEndpointname = "ingestsamplelogs"
+endpoint_uri = "https://ingestsamplelogs-6xlj.eastus-1.ingest.monitor.azure.com" # logs ingestion endpoint of the DCR
+SENTINEL_REPO_RAW_URL = f'https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth'
+SAMPLE_DATA_PATH = '/Sample%20Data/ASIM/'
+dcr_directory=[]
+
+lia_supported_builtin_table = ['ADAssessmentRecommendation','ADSecurityAssessmentRecommendation','Anomalies','ASimAuditEventLogs','ASimAuthenticationEventLogs','ASimDhcpEventLogs','ASimDnsActivityLogs','ASimDnsAuditLogs','ASimFileEventLogs','ASimNetworkSessionLogs','ASimProcessEventLogs','ASimRegistryEventLogs','ASimUserManagementActivityLogs','ASimWebSessionLogs','AWSCloudTrail','AWSCloudWatch','AWSGuardDuty','AWSVPCFlow','AzureAssessmentRecommendation','CommonSecurityLog','DeviceTvmSecureConfigurationAssessmentKB','DeviceTvmSoftwareVulnerabilitiesKB','ExchangeAssessmentRecommendation','ExchangeOnlineAssessmentRecommendation','GCPAuditLogs','GoogleCloudSCC','SCCMAssessmentRecommendation','SCOMAssessmentRecommendation','SecurityEvent','SfBAssessmentRecommendation','SharePointOnlineAssessmentRecommendation','SQLAssessmentRecommendation','StorageInsightsAccountPropertiesDaily','StorageInsightsDailyMetrics','StorageInsightsHourlyMetrics','StorageInsightsMonthlyMetrics','StorageInsightsWeeklyMetrics','Syslog','UCClient','UCClientReadinessStatus','UCClientUpdateStatus','UCDeviceAlert','UCDOAggregatedStatus','UCServiceUpdateStatus','UCUpdateAlert','WindowsEvent','WindowsServerAssessmentRecommendation']
+reserved_columns = ["_ResourceId", "id", "_SubscriptionId", "TenantId", "Type", "UniqueId", "Title","_ItemId","verbose_b","verbose"]
+
+SentinelRepoUrl = "https://github.com/manishkumar1991/MonitorYourInfraHealth"
+current_directory = os.path.dirname(os.path.abspath(__file__))
+modified_files = get_modified_files(current_directory)
+
+parser_yaml_files = filter_yaml_files(modified_files)
+
+commit_number = get_current_commit_number()
+prnumber = sys.argv[1]
+print(f'************{prnumber}****************')
