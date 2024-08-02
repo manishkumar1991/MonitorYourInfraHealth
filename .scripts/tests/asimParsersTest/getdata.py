@@ -22,7 +22,7 @@ def get_modified_files(current_directory):
     # Fetch from upstream
     git_fetch_upstream_command = "git fetch upstream"
     subprocess.run(git_fetch_upstream_command, shell=True, text=True, capture_output=True, check=True)
-    cmd = f"git diff --name-only upstream/master {current_directory}/../../../Parsers/"
+    cmd = f"git diff --name-only upstream/main {current_directory}/../../../Parsers/"
     try:
         return subprocess.check_output(cmd, shell=True).decode().split("\n")
     except subprocess.CalledProcessError as e:
@@ -251,7 +251,7 @@ dcr_directory=[]
 lia_supported_builtin_table = ['ADAssessmentRecommendation','ADSecurityAssessmentRecommendation','Anomalies','ASimAuditEventLogs','ASimAuthenticationEventLogs','ASimDhcpEventLogs','ASimDnsActivityLogs','ASimDnsAuditLogs','ASimFileEventLogs','ASimNetworkSessionLogs','ASimProcessEventLogs','ASimRegistryEventLogs','ASimUserManagementActivityLogs','ASimWebSessionLogs','AWSCloudTrail','AWSCloudWatch','AWSGuardDuty','AWSVPCFlow','AzureAssessmentRecommendation','CommonSecurityLog','DeviceTvmSecureConfigurationAssessmentKB','DeviceTvmSoftwareVulnerabilitiesKB','ExchangeAssessmentRecommendation','ExchangeOnlineAssessmentRecommendation','GCPAuditLogs','GoogleCloudSCC','SCCMAssessmentRecommendation','SCOMAssessmentRecommendation','SecurityEvent','SfBAssessmentRecommendation','SharePointOnlineAssessmentRecommendation','SQLAssessmentRecommendation','StorageInsightsAccountPropertiesDaily','StorageInsightsDailyMetrics','StorageInsightsHourlyMetrics','StorageInsightsMonthlyMetrics','StorageInsightsWeeklyMetrics','Syslog','UCClient','UCClientReadinessStatus','UCClientUpdateStatus','UCDeviceAlert','UCDOAggregatedStatus','UCServiceUpdateStatus','UCUpdateAlert','WindowsEvent','WindowsServerAssessmentRecommendation']
 reserved_columns = ["_ResourceId", "id", "_SubscriptionId", "TenantId", "Type", "UniqueId", "Title","_ItemId","verbose_b","verbose"]
 
-SentinelRepoUrl = "https://github.com/Azure/Azure-Sentinel"
+SentinelRepoUrl = "https://github.com/manishkumar1991/MonitorYourInfraHealth"
 current_directory = os.path.dirname(os.path.abspath(__file__))
 modified_files = get_modified_files(current_directory)
 
