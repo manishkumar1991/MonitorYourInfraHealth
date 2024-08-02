@@ -8,8 +8,8 @@ permissions:
   
 jobs:
   Run-ASim-Sample-Data-Ingest:
+    needs: check-files
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -37,3 +37,24 @@ jobs:
       id: Ingestlogs
       run: |
             python3 .scripts/tests/asimParsersTest/getdata.py ${{ github.event.pull_request.number }}
+  check-files:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+            python -m pip install --upgrade pip
+            pip install azure-identity
+            pip install requests 
+            pip install PyYAML
+    - name: Fetch asim files and check
+      id: Ingestlogs
+      run: |
+            python3 .scripts/tests/asimParsersTest/ingestdata.py          
