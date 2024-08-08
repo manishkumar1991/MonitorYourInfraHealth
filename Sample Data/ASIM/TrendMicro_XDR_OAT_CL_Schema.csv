@@ -70,7 +70,6 @@ RawData,6,"System.String",string
 "xdrCustomerId_g_g_g",68,"System.String",string
 "detectionTime_t_UTC__s",69,"System.String",string
 "endpoint_guid_g_g_g",70,"System.String",string
-"detail_endpointGuid_g_g_g",71,"System.String",string
 "detail_eventHashId_s",72,"System.String",string
 "detail_eventTimeDT_t_UTC__s",73,"System.String",string
 "detail_firstSeen_t_UTC__s",74,"System.String",string
@@ -149,7 +148,6 @@ RawData,6,"System.String",string
 "detail_deviceGUID_g_s",147,"System.String",string
 "detail_domainName_s_s",148,"System.String",string
 "detail_dvchost_s_s",149,"System.String",string
-"detail_endpointGUID_g_s",150,"System.String",string
 "detail_engType_s_s",151,"System.String",string
 "detail_engVer_s_s",152,"System.String",string
 "detail_eventId_d_s",153,"System.String",string
@@ -212,7 +210,6 @@ RawData,6,"System.String",string
 "detail_objectFilePath_s_s",210,"System.String",string
 "detail_objectCmd_s_s",211,"System.String",string
 "detail_tags_s_s",212,"System.String",string
-"detail_endpointGuid_g_g",213,"System.String",string
 "detail_authId_d_d",214,"System.Double",real
 "detail_endpointMacAddress_s_s",215,"System.String",string
 "detail_eventHashId_d_s",216,"System.String",string
@@ -402,7 +399,6 @@ RawData,6,"System.String",string
 "detail_objectFilePath_s",400,"System.String",string
 "detail_objectCmd_s",401,"System.String",string
 "detail_tags_s",402,"System.String",string
-"detail_endpointGuid_g",403,"System.String",string
 "detail_authId_d",404,"System.Double",real
 "detail_endpointMacAddress_s",405,"System.String",string
 "detail_eventHashId_d",406,"System.Double",real
