@@ -4,7 +4,7 @@ name: Run ASIM tests on "ASIM-SchemaDataTester-GithubShared" workspace
 on:
   pull_request_target:
     branches:
-      - master
+      - main
     
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
