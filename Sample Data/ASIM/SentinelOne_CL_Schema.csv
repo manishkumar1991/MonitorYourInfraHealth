@@ -1,0 +1,9 @@
+ColumnName,ColumnOrdinal,DataType,ColumnType
+TimeGenerated,4,"System.DateTime",datetime
+Computer,5,"System.String",string
+RawData,6,"System.String",string
+"targetProcessInfo_tgtFileId_g",18,"System.String",string
+"sourceProcessInfo_pidStarttime_t",105,"System.DateTime",datetime
+Type,310,"System.String",string
+"_ResourceId",311,"System.String",string
+"_ItemId",312,"System.String",string
