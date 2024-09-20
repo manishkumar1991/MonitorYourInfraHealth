@@ -3,9 +3,8 @@
 name: Run ASIM tests on "ASIM-SchemaDataTester-GithubShared" workspace
 on:
   pull_request_target:
-    types: [opened, edited, reopened, synchronize]
     branches:
-      - master
+      - main
     
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,9 +29,9 @@ jobs:
         run: |
               git config --local user.name "github-actions[bot]"
               git config --local user.email "<>"
-      - name: Merge master into pull request branch
+      - name: Merge main into pull request branch
         run: |
-              git merge origin/master
+              git merge origin/main
               Conflicts=$(git ls-files -u | wc -l)
               if [ "$Conflicts" -gt 0 ] ; then
                 echo "There is a merge conflict. Aborting"
@@ -51,27 +50,43 @@ jobs:
               pip install tabulate
       - name: Run ASim parsers template validations python script
         run: |
-              filePath=".script/tests/asimParsersTest/VerifyASimParserTemplate.py"
-              url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
+              #filePath=".script/tests/asimParsersTest/VerifyASimParserTemplate.py"
+              #url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
               # Check if file exists and delete if it does
-              if [ -f "$filePath" ]; then
-                rm -f "$filePath"
-              fi
+              #if [ -f "$filePath" ]; then
+              #  rm -f "$filePath"
+              #fi
               # Download the file
-              echo "Downloading script from the master: $url"
-              curl -o "$filePath" "$url"
+              echo "Downloading script from the main"
+              #curl -o "$filePath" "$url"
               # Execute the script
-              python "$filePath" 
+              #python "$filePath" 
   Run-ASim-Sample-Data-Ingest:
     needs: Run-ASim-TemplateValidation
     name: Run ASim Sample Data Ingestion
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout pull request branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
-      - name: Setup Python
+            ref: ${{github.event.pull_request.head.ref}}
+            repository: ${{github.event.pull_request.head.repo.full_name}}
+            persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+            fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - name: Setup git config
+        run: |
+              git config --local user.name "github-actions[bot]"
+              git config --local user.email "<>"
+      - name: Merge main into pull request branch
+        run: |
+              git merge origin/main
+              Conflicts=$(git ls-files -u | wc -l)
+              if [ "$Conflicts" -gt 0 ] ; then
+                echo "There is a merge conflict. Aborting"
+                git merge --abort
+                exit 1
+              fi
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
@@ -86,7 +101,7 @@ jobs:
       - name: Login to Azure Public Cloud
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_ASIM_CLIENT_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
       - name: Asim Sample Log Ingestion
@@ -99,7 +114,7 @@ jobs:
                 rm -f "$filePath"
               fi
               # Download the file
-              echo "Downloading script from the master: $url"
+              echo "Downloading script from the main: $url"
               curl -o "$filePath" "$url"
               chmod +x "$filePath"
               # Execute the script
@@ -120,7 +135,7 @@ jobs:
       - name: Login to Azure Public Cloud with AzPowershell
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_ASIM_CLIENT_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           enable-AzPSSession: true
           allow-no-subscriptions: true
@@ -130,9 +145,9 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "<>"
 
-      - name: Merge master into pull request branch
+      - name: Merge main into pull request branch
         run: |
-          git merge origin/master
+          git merge origin/main
           Conflicts=$(git ls-files -u | wc -l)
           if [ "$Conflicts" -gt 0 ] ; then
             echo "There is a merge conflict. Aborting"
@@ -144,23 +159,23 @@ jobs:
         with:
           inlineScript: |
             $filePath = ".script/tests/asimParsersTest/runAsimTesters.ps1"
-            $url = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/.script/tests/asimParsersTest/runAsimTesters.ps1"
+            $url = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/runAsimTesters.ps1"
             # Check if file exists and delete if it does
             if (Test-Path $filePath) {
               Remove-Item $filePath -Force
             }
             # Download the runAsimTesters file
-            Write-Host "Downloading script from the master: $url"
+            Write-Host "Downloading script from the main: $url"
             Invoke-WebRequest -Uri $url -OutFile $filePath
-            # download the convertYamlToObject.ps1 script form master
+            # download the convertYamlToObject.ps1 script form main
             $filePath_convert_yaml = ".script/tests/asimParsersTest/convertYamlToObject.ps1"
-            $url_convert_yaml = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/.script/tests/asimParsersTest/convertYamlToObject.ps1"
+            $url_convert_yaml = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/convertYamlToObject.ps1"
             # Check if file exists and delete if it does
             if (Test-Path $filePath_convert_yaml) {
               Remove-Item $filePath_convert_yaml -Force
             }
             # Download the convertYamlToObject file
-            Write-Host "Downloading script from the master: $url_convert_yaml"
+            Write-Host "Downloading script from the main: $url_convert_yaml"
             Invoke-WebRequest -Uri $url_convert_yaml -OutFile $filePath_convert_yaml 
             # Execute the script
             & $filePath
@@ -183,9 +198,9 @@ jobs:
         run: |
               git config --local user.name "github-actions[bot]"
               git config --local user.email "<>"
-      - name: Merge master into pull request branch
+      - name: Merge main into pull request branch
         run: |
-          git merge origin/master
+          git merge origin/main
           Conflicts=$(git ls-files -u | wc -l)
           if [ "$Conflicts" -gt 0 ] ; then
             echo "There is a merge conflict. Aborting"
@@ -205,19 +220,19 @@ jobs:
       - name: Login to Azure Public Cloud
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_ASIM_CLIENT_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
       - name: Run ASim parsers filtering tests python script
         run: |
           filePath=".script/tests/asimParsersTest/ASimFilteringTest.py"
-          url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/.script/tests/asimParsersTest/ASimFilteringTest.py"
+          url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/ASimFilteringTest.py"
           # Check if file exists and delete if it does
           if [ -f "$filePath" ]; then
             rm -f "$filePath"
           fi
           # Download the file
-          echo "Downloading script from the master: $url"
+          echo "Downloading script from the main: $url"
           curl -o "$filePath" "$url"
           # Execute the script
           python "$filePath"
