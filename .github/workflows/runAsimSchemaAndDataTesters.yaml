@@ -29,9 +29,9 @@ jobs:
         run: |
               git config --local user.name "github-actions[bot]"
               git config --local user.email "<>"
-      - name: Merge master into pull request branch
+      - name: Merge main into pull request branch
         run: |
-              git merge origin/master
+              git merge origin/main
               Conflicts=$(git ls-files -u | wc -l)
               if [ "$Conflicts" -gt 0 ] ; then
                 echo "There is a merge conflict. Aborting"
@@ -51,13 +51,13 @@ jobs:
       - name: Run ASim parsers template validations python script
         run: |
               filePath=".script/tests/asimParsersTest/VerifyASimParserTemplate.py"
-              url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
+              url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
               # Check if file exists and delete if it does
               if [ -f "$filePath" ]; then
                 rm -f "$filePath"
               fi
               # Download the file
-              echo "Downloading script from the master: $url"
+              echo "Downloading script from the main: $url"
               curl -o "$filePath" "$url"
               # Execute the script
               python "$filePath" 
@@ -98,7 +98,7 @@ jobs:
                 rm -f "$filePath"
               fi
               # Download the file
-              echo "Downloading script from the master: $url"
+              echo "Downloading script from the main: $url"
               curl -o "$filePath" "$url"
               chmod +x "$filePath"
               # Execute the script
@@ -129,9 +129,9 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "<>"
 
-      - name: Merge master into pull request branch
+      - name: Merge main into pull request branch
         run: |
-          git merge origin/master
+          git merge origin/main
           Conflicts=$(git ls-files -u | wc -l)
           if [ "$Conflicts" -gt 0 ] ; then
             echo "There is a merge conflict. Aborting"
@@ -143,23 +143,23 @@ jobs:
         with:
           inlineScript: |
             $filePath = ".script/tests/asimParsersTest/runAsimTesters.ps1"
-            $url = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/.script/tests/asimParsersTest/runAsimTesters.ps1"
+            $url = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/runAsimTesters.ps1"
             # Check if file exists and delete if it does
             if (Test-Path $filePath) {
               Remove-Item $filePath -Force
             }
             # Download the runAsimTesters file
-            Write-Host "Downloading script from the master: $url"
+            Write-Host "Downloading script from the main: $url"
             Invoke-WebRequest -Uri $url -OutFile $filePath
-            # download the convertYamlToObject.ps1 script form master
+            # download the convertYamlToObject.ps1 script form main
             $filePath_convert_yaml = ".script/tests/asimParsersTest/convertYamlToObject.ps1"
-            $url_convert_yaml = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/.script/tests/asimParsersTest/convertYamlToObject.ps1"
+            $url_convert_yaml = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/convertYamlToObject.ps1"
             # Check if file exists and delete if it does
             if (Test-Path $filePath_convert_yaml) {
               Remove-Item $filePath_convert_yaml -Force
             }
             # Download the convertYamlToObject file
-            Write-Host "Downloading script from the master: $url_convert_yaml"
+            Write-Host "Downloading script from the main: $url_convert_yaml"
             Invoke-WebRequest -Uri $url_convert_yaml -OutFile $filePath_convert_yaml 
             # Execute the script
             & $filePath
@@ -182,9 +182,9 @@ jobs:
         run: |
               git config --local user.name "github-actions[bot]"
               git config --local user.email "<>"
-      - name: Merge master into pull request branch
+      - name: Merge main into pull request branch
         run: |
-          git merge origin/master
+          git merge origin/main
           Conflicts=$(git ls-files -u | wc -l)
           if [ "$Conflicts" -gt 0 ] ; then
             echo "There is a merge conflict. Aborting"
@@ -210,13 +210,13 @@ jobs:
       - name: Run ASim parsers filtering tests python script
         run: |
           filePath=".script/tests/asimParsersTest/ASimFilteringTest.py"
-          url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/.script/tests/asimParsersTest/ASimFilteringTest.py"
+          url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/ASimFilteringTest.py"
           # Check if file exists and delete if it does
           if [ -f "$filePath" ]; then
             rm -f "$filePath"
           fi
           # Download the file
-          echo "Downloading script from the master: $url"
+          echo "Downloading script from the main: $url"
           curl -o "$filePath" "$url"
           # Execute the script
           python "$filePath"
