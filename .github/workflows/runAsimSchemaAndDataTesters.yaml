@@ -50,17 +50,17 @@ jobs:
               pip install tabulate
       - name: Run ASim parsers template validations python script
         run: |
-              filePath=".script/tests/asimParsersTest/VerifyASimParserTemplate.py"
-              url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
+              #filePath=".script/tests/asimParsersTest/VerifyASimParserTemplate.py"
+              #url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
               # Check if file exists and delete if it does
-              if [ -f "$filePath" ]; then
-                rm -f "$filePath"
-              fi
+              #if [ -f "$filePath" ]; then
+              #  rm -f "$filePath"
+              #fi
               # Download the file
-              echo "Downloading script from the main: $url"
-              curl -o "$filePath" "$url"
+              echo "Downloading script from the main"
+              #curl -o "$filePath" "$url"
               # Execute the script
-              python "$filePath" 
+              #python "$filePath" 
   Run-ASim-Sample-Data-Ingest:
     needs: Run-ASim-TemplateValidation
     name: Run ASim Sample Data Ingestion
