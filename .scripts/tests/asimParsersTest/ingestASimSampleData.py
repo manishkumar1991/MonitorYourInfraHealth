@@ -282,6 +282,7 @@ for file in parser_yaml_files:
         SchemaName = None
     # Check if changed file is a union parser. If Yes, skip the file
     if file.endswith((f'ASim{SchemaName}.yaml', f'im{SchemaName}.yaml')):
+        print(f"Ignoring this {file} because it is a union parser file")
         continue        
     print(f"Starting ingestion for sample data present in {file}")
     asim_parser_url = f'{SENTINEL_REPO_RAW_URL}/{commit_number}/{file}'
