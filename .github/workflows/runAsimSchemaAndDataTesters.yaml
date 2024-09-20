@@ -3,7 +3,6 @@
 name: Run ASIM tests on "ASIM-SchemaDataTester-GithubShared" workspace
 on:
   pull_request_target:
-    types: [opened, edited, reopened, synchronize]
     branches:
       - master
     
