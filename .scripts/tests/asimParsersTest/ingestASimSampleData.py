@@ -77,7 +77,7 @@ def convert_data_csv_to_json(csv_file):
         for item in data:
             for key in list(item.keys()):
                 # If the key matches 'TimeGenerated [UTC]', rename it
-                if key.endswith('[UTC]'):
+                if key.endswith(('[UTC]', '[Local Time]')):
                     substring = key.split(" [")[0] 
                     item[substring] = item.pop(key)                               
     return data , table_name
