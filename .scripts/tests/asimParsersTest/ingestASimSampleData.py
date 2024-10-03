@@ -68,19 +68,36 @@ def convert_schema_csv_to_json(csv_file):
     return data
 
 def convert_data_csv_to_json(csv_file):
+    def convert_value(value):
+        # Try to convert the value to an integer, then to a float, and keep it as a string if those fail
+        try:
+            # Try integer conversion
+            return int(value)
+        except ValueError:
+            try:
+                # Try float conversion
+                return float(value)
+            except ValueError:
+                # Return the value as-is (string) if it's not numeric
+                return value
+
     data = []
-    with open(csv_file, 'r',encoding='utf-8-sig') as file:
+    with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            table_name=row['Type']
-            data.append(row)
+            table_name = row['Type']
+            # Convert each value in the row to its appropriate type
+            processed_row = {key: convert_value(value) for key, value in row.items()}
+            data.append(processed_row)
+        
         for item in data:
             for key in list(item.keys()):
-                # If the key matches 'TimeGenerated [UTC]', rename it
+                # If the key matches '[UTC]' or '[Local Time]', rename it
                 if key.endswith(('[UTC]', '[Local Time]')):
-                    substring = key.split(" [")[0] 
-                    item[substring] = item.pop(key)                               
-    return data , table_name
+                    substring = key.split(" [")[0]
+                    item[substring] = item.pop(key)
+
+    return data, table_name
 
 def check_for_custom_table(table_name):
     if table_name in lia_supported_builtin_table:
