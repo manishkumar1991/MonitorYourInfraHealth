@@ -288,9 +288,11 @@ for file in parser_yaml_files:
     asim_parser_url = f'{SENTINEL_REPO_RAW_URL}/{commit_number}/{file}'
     asim_parser = read_github_yaml(asim_parser_url)
     parser_query = asim_parser.get('ParserQuery', '')
+    normalization = asim_parser.get('Normalization', {})
+    schema = normalization.get('Schema')
     event_vendor, event_product, schema_name = extract_event_vendor_product(parser_query, file)
 
-    SampleDataFile = f'{event_vendor}_{event_product}_{schema_name}_IngestedLogs.csv'
+    SampleDataFile = f'{event_vendor}_{event_product}_{schema}_IngestedLogs.csv'
     sample_data_url = f'{SENTINEL_REPO_RAW_URL}/{commit_number}/{SAMPLE_DATA_PATH}'
     SampleDataUrl = sample_data_url+SampleDataFile
     response = requests.get(SampleDataUrl)
