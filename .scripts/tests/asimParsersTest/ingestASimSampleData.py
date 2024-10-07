@@ -21,7 +21,7 @@ def get_modified_files(current_directory):
     # Fetch from upstream
     git_fetch_upstream_command = "git fetch upstream"
     subprocess.run(git_fetch_upstream_command, shell=True, text=True, capture_output=True, check=True)
-    cmd = f"git diff --name-only upstream/main {current_directory}/../../../Parsers/"
+    cmd = f"git diff --name-only upstream/master {current_directory}/../../../Parsers/"
     try:
         return subprocess.check_output(cmd, shell=True).decode().split("\n")
     except subprocess.CalledProcessError as e:
@@ -269,20 +269,20 @@ def extract_event_vendor_product(parser_query,parser_file):
 
 #main starting point of script
 
-workspace_id = "c64eb659-e5d8-4727-a9cd-ea4a085138e6"
-workspaceName = "personal-workspace"
-resourceGroupName = "test_infrastructure"
-subscriptionId = "f70efef4-6505-4727-acd8-9d0b3bc0b80e"
-dataCollectionEndpointname = "ingestsamplelogs"
-endpoint_uri = "https://ingestsamplelogs-6xlj.eastus-1.ingest.monitor.azure.com" # logs ingestion endpoint of the DCR
-SENTINEL_REPO_RAW_URL = f'https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth'
+workspace_id = "e9beceee-7d61-429f-a177-ee5e2b7f481a"
+workspaceName = "ASIM-SchemaDataTester-GithubShared"
+resourceGroupName = "asim-schemadatatester-githubshared"
+subscriptionId = "4383ac89-7cd1-48c1-8061-b0b3c5ccfd97"
+dataCollectionEndpointname = "asim-schemadatatester-githubshared"
+endpoint_uri = "https://asim-schemadatatester-githubshared-uetl.eastus-1.ingest.monitor.azure.com" # logs ingestion endpoint of the DCR
+SENTINEL_REPO_RAW_URL = f'https://raw.githubusercontent.com/Azure/Azure-Sentinel'
 SAMPLE_DATA_PATH = 'Sample%20Data/ASIM/'
 dcr_directory=[]
 
 lia_supported_builtin_table = ['ADAssessmentRecommendation','ADSecurityAssessmentRecommendation','Anomalies','ASimAuditEventLogs','ASimAuthenticationEventLogs','ASimDhcpEventLogs','ASimDnsActivityLogs','ASimDnsAuditLogs','ASimFileEventLogs','ASimNetworkSessionLogs','ASimProcessEventLogs','ASimRegistryEventLogs','ASimUserManagementActivityLogs','ASimWebSessionLogs','AWSCloudTrail','AWSCloudWatch','AWSGuardDuty','AWSVPCFlow','AzureAssessmentRecommendation','CommonSecurityLog','DeviceTvmSecureConfigurationAssessmentKB','DeviceTvmSoftwareVulnerabilitiesKB','ExchangeAssessmentRecommendation','ExchangeOnlineAssessmentRecommendation','GCPAuditLogs','GoogleCloudSCC','SCCMAssessmentRecommendation','SCOMAssessmentRecommendation','SecurityEvent','SfBAssessmentRecommendation','SharePointOnlineAssessmentRecommendation','SQLAssessmentRecommendation','StorageInsightsAccountPropertiesDaily','StorageInsightsDailyMetrics','StorageInsightsHourlyMetrics','StorageInsightsMonthlyMetrics','StorageInsightsWeeklyMetrics','Syslog','UCClient','UCClientReadinessStatus','UCClientUpdateStatus','UCDeviceAlert','UCDOAggregatedStatus','UCServiceUpdateStatus','UCUpdateAlert','WindowsEvent','WindowsServerAssessmentRecommendation']
 reserved_columns = ["_ResourceId", "id", "_SubscriptionId", "TenantId", "Type", "UniqueId", "Title","_ItemId","verbose_b","verbose","MG","_ResourceId_s"]
 
-SentinelRepoUrl = "https://github.com/manishkumar1991/MonitorYourInfraHealth"
+SentinelRepoUrl = "https://github.com/Azure/Azure-Sentinel"
 current_directory = os.path.dirname(os.path.abspath(__file__))
 modified_files = get_modified_files(current_directory)
 
@@ -319,8 +319,7 @@ for file in parser_yaml_files:
     else:
         print(f"::error::An error occurred while trying to get content of Sample Data file located at {SampleDataUrl}: {response.text}")
         continue           
-    data_result,table_name = convert_data_csv_to_json('tempfile.csv')
-    print(json.dumps(data_result, indent=4))   
+    data_result,table_name = convert_data_csv_to_json('tempfile.csv')   
     print(f"Table Name : {table_name}")
     log_ingestion_supported,table_type=check_for_custom_table(table_name)
     print(f"Log ingestion supported: {log_ingestion_supported}\n Table type: {table_type}")
