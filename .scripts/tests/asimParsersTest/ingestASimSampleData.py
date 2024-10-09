@@ -320,7 +320,6 @@ for file in parser_yaml_files:
         print(f"::error::An error occurred while trying to get content of Sample Data file located at {SampleDataUrl}: {response.text}")
         continue           
     data_result,table_name = convert_data_csv_to_json('tempfile.csv')
-    print(json.dumps(data_result, indent=4))   
     print(f"Table Name : {table_name}")
     log_ingestion_supported,table_type=check_for_custom_table(table_name)
     print(f"Log ingestion supported: {log_ingestion_supported}\n Table type: {table_type}")
