@@ -283,7 +283,7 @@ def convert_data_type(schema_result, data_result):
                     data[field_name] = str(value)
                 elif field_type == "boolean":
                     # Convert to boolean
-                    if isinstance(value, str) and value.lower() in ["true", "false"]::
+                    if isinstance(value, str) and value.lower() in ["true", "false"]:
                         data[field_name] = value.lower() == "true"
 
     return data_result
