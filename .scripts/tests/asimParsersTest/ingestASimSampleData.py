@@ -267,6 +267,29 @@ def extract_event_vendor_product(parser_query,parser_file):
         print(f'Event Product field not mapped in parser. Please map it in parser query.{parser_file}')
     return event_vendor, event_product ,schema_name   
 
+def convert_data_type(schema_result, data_result):
+    for data in data_result:
+        for schema in schema_result:
+            field_name = schema["name"]
+            field_type = schema["type"]
+            
+            if field_name in data:
+                value = data[field_name]
+                
+                # Handle conversion based on schema type
+                
+                if field_type == "string":
+                    # Convert to string
+                    data[field_name] = str(value)
+                elif field_type == "boolean":
+                    # Convert to boolean
+                    if isinstance(value, str):
+                        data[field_name] = value.lower() == "true"
+                    else:
+                        data[field_name] = bool(value)  
+
+    return data_result
+
 #main starting point of script
 
 workspace_id = "c64eb659-e5d8-4727-a9cd-ea4a085138e6"
@@ -334,8 +357,12 @@ for file in parser_yaml_files:
         else:
             print(f"::error::An error occurred while trying to get content of Schema file located at {schemaUrl}: {response.text}")
             continue        
-        schema_result = convert_schema_csv_to_json('tempfile.csv') 
-        # create table 
+        schema_result = convert_schema_csv_to_json('tempfile.csv')
+        data_result = convert_data_type(schema_result, data_result)
+        # conversion of datatype is needed for boolean and string values because during testing it has been observed that 
+        # boolean values are consider as string and numerical value of type string are consider 
+        # as integer which leds to non ingestion of those value in sentinel     
+        # Create table 
         request_body, url_to_call , method_to_use = create_table(json.dumps(schema_result, indent=4),table_name)
         response_body=hit_api(url_to_call,request_body,method_to_use)
         print(f"Response of table creation: {response_body.text} {response_body.status_code}")
