@@ -1,71 +1,71 @@
-ColumnName	ColumnOrdinal	DataType	ColumnType
-TenantId	0	System.String	string
-SourceSystem	1	System.String	string
-MG	2	System.String	string
-ManagementGroupName	3	System.String	string
-TimeGenerated	4	System.DateTime	datetime
-Computer	5	System.String	string
-RawData	6	System.String	string
-applianceLabel_s	7	System.String	string
-statusName_s	8	System.String	string
-startTime_s	9	System.String	string
-endTime_s	10	System.String	string
-externalId_g	11	System.String	string
-mac_s	12	System.String	string
-identifier_s	13	System.String	string
-activityId_s	14	System.String	string
-groupingId_s	15	System.String	string
-groupByActivity_b	16	System.SByte	bool
-title_s	17	System.String	string
-summary_s	18	System.String	string
-summaryFirstSentence_s	19	System.String	string
-newEvent_b	20	System.SByte	bool
-currentGroup_s	21	System.String	string
-groupPreviousGroups_s	22	System.String	string
-groupScore_d	23	System.Double	real
-groupCategory_s	24	System.String	string
-bestDeviceName_s	25	System.String	string
-sid_d	26	System.Double	real
-url_s	27	System.String	string
-time_s	28	System.String	string
-name_s	29	System.String	string
-friendlyName_s	30	System.String	string
-priority_code_d	31	System.Double	real
-priority_s	32	System.String	string
-Severity	33	System.Double	real
-status_s	34	System.String	string
-deviceIP_s	35	System.String	string
-pid_d	36	System.Double	real
-uuid_g	37	System.String	string
-deviceId_d	38	System.Double	real
-Category	39	System.String	string
-compliance_b	40	System.SByte	bool
-threatID_d	41	System.Double	real
-description_s	42	System.String	string
-breachTime_s	43	System.String	string
-breachUrl_s	44	System.String	string
-modelName_s	45	System.String	string
-score_d	46	System.Double	real
-hostname_s	47	System.String	string
-typeLabel_s	48	System.String	string
-SourceIP	49	System.String	string
-sourcePort_s	50	System.String	string
-sourceMac_s	51	System.String	string
-sourceHost_s	52	System.String	string
-destIP_s	53	System.String	string
-destPort_s	54	System.String	string
-destHost_s	55	System.String	string
-destMac_s	56	System.String	string
-triggeredComponents_s	57	System.String	string
-details_s	58	System.String	string
-longitude_d	59	System.Double	real
-latitude_d	60	System.Double	real
-tags_s	61	System.String	string
-Message	62	System.String	string
-mitreTechniques_s	63	System.String	string
-dtProduct_s	64	System.String	string
-antigena_b	65	System.SByte	bool
-cSensor_b	66	System.SByte	bool
-cSensorID_s	67	System.String	string
-Type	68	System.String	string
-_ResourceId	69	System.String	string
+ColumnName,ColumnOrdinal,DataType,ColumnType
+TenantId,0,System.String,string
+SourceSystem,1,System.String,string
+MG,2,System.String,string
+ManagementGroupName,3,System.String,string
+TimeGenerated,4,System.DateTime,datetime
+Computer,5,System.String,string
+RawData,6,System.String,string
+applianceLabel_s,7,System.String,string
+statusName_s,8,System.String,string
+startTime_s,9,System.String,string
+endTime_s,10,System.String,string
+externalId_g,11,System.String,string
+mac_s,12,System.String,string
+identifier_s,13,System.String,string
+activityId_s,14,System.String,string
+groupingId_s,15,System.String,string
+groupByActivity_b,16,System.SByte,bool
+title_s,17,System.String,string
+summary_s,18,System.String,string
+summaryFirstSentence_s,19,System.String,string
+newEvent_b,20,System.SByte,bool
+currentGroup_s,21,System.String,string
+groupPreviousGroups_s,22,System.String,string
+groupScore_d,23,System.Double,real
+groupCategory_s,24,System.String,string
+bestDeviceName_s,25,System.String,string
+sid_d,26,System.Double,real
+url_s,27,System.String,string
+time_s,28,System.String,string
+name_s,29,System.String,string
+friendlyName_s,30,System.String,string
+priority_code_d,31,System.Double,real
+priority_s,32,System.String,string
+Severity,33,System.Double,real
+status_s,34,System.String,string
+deviceIP_s,35,System.String,string
+pid_d,36,System.Double,real
+uuid_g,37,System.String,string
+deviceId_d,38,System.Double,real
+Category,39,System.String,string
+compliance_b,40,System.SByte,bool
+threatID_d,41,System.Double,real
+description_s,42,System.String,string
+breachTime_s,43,System.String,string
+breachUrl_s,44,System.String,string
+modelName_s,45,System.String,string
+score_d,46,System.Double,real
+hostname_s,47,System.String,string
+typeLabel_s,48,System.String,string
+SourceIP,49,System.String,string
+sourcePort_s,50,System.String,string
+sourceMac_s,51,System.String,string
+sourceHost_s,52,System.String,string
+destIP_s,53,System.String,string
+destPort_s,54,System.String,string
+destHost_s,55,System.String,string
+destMac_s,56,System.String,string
+triggeredComponents_s,57,System.String,string
+details_s,58,System.String,string
+longitude_d,59,System.Double,real
+latitude_d,60,System.Double,real
+tags_s,61,System.String,string
+Message,62,System.String,string
+mitreTechniques_s,63,System.String,string
+dtProduct_s,64,System.String,string
+antigena_b,65,System.SByte,bool
+cSensor_b,66,System.SByte,bool
+cSensorID_s,67,System.String,string
+Type,68,System.String,string
+_ResourceId,69,System.String,string
