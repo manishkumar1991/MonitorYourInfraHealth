@@ -544,8 +544,8 @@ ParserQuery: |
         union ParsedActivitydatawithThreat, ParsedActivitydatawithoutThreat
         | extend 
             EventSeverity = coalesce(EventSeverity_specific, EventSeverity_activity, EventSeverity_lookup),
-            EventProduct = "SentinelOne",
-            EventVendor = "SentinelOne",
+            EventProduct = "Detect",
+            EventVendor = "DarkTrace",
             EventSchema = "AuditEvent",
             EventSchemaVersion = "0.1",
             EventCount = toint(1),
