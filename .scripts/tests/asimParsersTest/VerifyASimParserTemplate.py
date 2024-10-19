@@ -305,7 +305,7 @@ def print_results_table(results):
     print(tabulate(table, headers=['S.No', 'Test Value', 'Test Name', 'Result'], tablefmt="grid"))
 
 def check_test_failures(results, parser):
-    if any(result[-1] is not True for result in results):
+    if any(result[-1] == f'{RED}Fail{RESET}' for result in results):
         print("::error::Some tests failed for Parser. Please check the results above.")
     exclusion_list = read_exclusion_list_from_csv()
     if parser.get('EquivalentBuiltInParser') in exclusion_list:
