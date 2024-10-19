@@ -1,6 +1,6 @@
 Parser:
   Title: Audit Event ASIM parser for Barracuda WAF
-  Version: '0.2.1'
+  Version: '0.2.2'
   LastUpdated: Jun 12, 2024
 Product:
   Name: Barracuda WAF
