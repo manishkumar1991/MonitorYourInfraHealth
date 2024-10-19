@@ -269,7 +269,7 @@ def get_modified_files(current_directory):
     # Fetch from upstream
     git_fetch_upstream_command = "git fetch upstream"
     subprocess.run(git_fetch_upstream_command, shell=True, text=True, capture_output=True, check=True)
-    cmd = f"git diff --name-only upstream/master {current_directory}/../../../Parsers/"
+    cmd = f"git diff --name-only upstream/main {current_directory}/../../../Parsers/"
     try:
         return subprocess.check_output(cmd, shell=True).decode().split("\n")
     except subprocess.CalledProcessError as e:
