@@ -152,8 +152,6 @@ ParserQuery: |
             | extend
                 EventSchema = "AuditEvent",
                 EventSchemaVersion = "0.1.0",
-                EventVendor = "Barracuda",
-                EventProduct = "WAF",
                 EventCount = toint(1)
             | extend
                 Dvc = UnitName_s,
