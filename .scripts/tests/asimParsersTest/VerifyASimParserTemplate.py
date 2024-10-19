@@ -11,7 +11,7 @@ from tabulate import tabulate
 # Constants
 SENTINEL_REPO_RAW_URL = f'https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth'
 SAMPLE_DATA_PATH = 'Sample%20Data/ASIM/'
-parser_exclusion_file_path = '.script/tests/asimParsersTest/ExclusionListForASimTests.csv'
+parser_exclusion_file_path = '.scripts/tests/asimParsersTest/ExclusionListForASimTests.csv'
 # Sentinel Repo URL
 SentinelRepoUrl = f"https://github.com/manishkumar1991/MonitorYourInfraHealth.git"
 SCHEMA_INFO = [
