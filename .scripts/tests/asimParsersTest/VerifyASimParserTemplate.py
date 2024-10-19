@@ -310,13 +310,13 @@ def check_test_failures(results, parser):
     exclusion_list = read_exclusion_list_from_csv()
     if parser.get('EquivalentBuiltInParser') in exclusion_list:
         print(f"::warning::The parser {parser.get('EquivalentBuiltInParser')} is listed in the exclusions file. Therefore, this workflow run will not fail because of it. To allow this parser to cause the workflow to fail, please remove its name from the exclusions list file located at: {parser_exclusion_file_path}")
-    #else:
-        # exit(1)
+    else:
+        exit(1)
 
 def check_parser_found(asim_parser,parser_url):
     if asim_parser is None:
         print(f"::error::Parser file not found. Please check the URL and try again: {parser_url}")
-        # exit(1) # Uncomment this line to fail the workflow if parser file not found.
+        exit(1) # Uncomment this line to fail the workflow if parser file not found.
     else:
         return True
 
