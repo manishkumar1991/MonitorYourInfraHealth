@@ -158,8 +158,8 @@ jobs:
         uses: azure/powershell@v2
         with:
           inlineScript: |
-            filePath = ".scripts/tests/asimParsersTest/runAsimTesters.ps1"
-            url = "https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.scripts/tests/asimParsersTest/runAsimTesters.ps1"
+            $filePath = ".scripts/tests/asimParsersTest/runAsimTesters.ps1"
+            $url = "https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.scripts/tests/asimParsersTest/runAsimTesters.ps1"
             # Check if file exists and delete if it does
             if (Test-Path $filePath) {
               Remove-Item $filePath -Force
@@ -178,7 +178,7 @@ jobs:
             #Write-Host "Downloading script from the main: $url_convert_yaml"
             #Invoke-WebRequest -Uri $url_convert_yaml -OutFile $filePath_convert_yaml 
             # Execute the script
-            $filePath
+            & $filePath
           azPSVersion: "latest"
           errorActionPreference: continue
           failOnStandardError: false
