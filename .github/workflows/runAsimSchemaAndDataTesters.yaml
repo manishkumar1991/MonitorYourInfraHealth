@@ -50,17 +50,17 @@ jobs:
               pip install tabulate
       - name: Run ASim parsers template validations python script
         run: |
-              #filePath=".script/tests/asimParsersTest/VerifyASimParserTemplate.py"
-              #url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
+              filePath=".script/tests/asimParsersTest/VerifyASimParserTemplate.py"
+              url="https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
               # Check if file exists and delete if it does
-              #if [ -f "$filePath" ]; then
-              #  rm -f "$filePath"
-              #fi
+              if [ -f "$filePath" ]; then
+                rm -f "$filePath"
+              fi
               # Download the file
               echo "Downloading script from the main"
-              #curl -o "$filePath" "$url"
+              curl -o "$filePath" "$url"
               # Execute the script
-              #python "$filePath" 
+              python "$filePath" 
   Run-ASim-Sample-Data-Ingest:
     needs: Run-ASim-TemplateValidation
     name: Run ASim Sample Data Ingestion
@@ -158,8 +158,8 @@ jobs:
         uses: azure/powershell@v2
         with:
           inlineScript: |
-            $filePath = ".script/tests/asimParsersTest/runAsimTesters.ps1"
-            $url = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/runAsimTesters.ps1"
+            filePath = ".script/tests/asimParsersTest/runAsimTesters.ps1"
+            url = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/runAsimTesters.ps1"
             # Check if file exists and delete if it does
             if (Test-Path $filePath) {
               Remove-Item $filePath -Force
@@ -168,17 +168,17 @@ jobs:
             Write-Host "Downloading script from the main: $url"
             Invoke-WebRequest -Uri $url -OutFile $filePath
             # download the convertYamlToObject.ps1 script form main
-            $filePath_convert_yaml = ".script/tests/asimParsersTest/convertYamlToObject.ps1"
-            $url_convert_yaml = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/convertYamlToObject.ps1"
+            #$filePath_convert_yaml = ".script/tests/asimParsersTest/convertYamlToObject.ps1"
+            #$url_convert_yaml = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/convertYamlToObject.ps1"
             # Check if file exists and delete if it does
-            if (Test-Path $filePath_convert_yaml) {
-              Remove-Item $filePath_convert_yaml -Force
-            }
+            #if (Test-Path $filePath_convert_yaml) {
+            #  Remove-Item $filePath_convert_yaml -Force
+            #}
             # Download the convertYamlToObject file
-            Write-Host "Downloading script from the main: $url_convert_yaml"
-            Invoke-WebRequest -Uri $url_convert_yaml -OutFile $filePath_convert_yaml 
+            #Write-Host "Downloading script from the main: $url_convert_yaml"
+            #Invoke-WebRequest -Uri $url_convert_yaml -OutFile $filePath_convert_yaml 
             # Execute the script
-            & $filePath
+            # $filePath
           azPSVersion: "latest"
           errorActionPreference: continue
           failOnStandardError: false
@@ -226,7 +226,7 @@ jobs:
       - name: Run ASim parsers filtering tests python script
         run: |
           filePath=".script/tests/asimParsersTest/ASimFilteringTest.py"
-          url="https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/ASimFilteringTest.py"
+          url="https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.script/tests/asimParsersTest/ASimFilteringTest.py"
           # Check if file exists and delete if it does
           if [ -f "$filePath" ]; then
             rm -f "$filePath"
