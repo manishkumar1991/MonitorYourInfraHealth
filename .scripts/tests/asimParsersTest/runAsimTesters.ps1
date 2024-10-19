@@ -42,7 +42,7 @@ function run {
     Invoke-Expression "git fetch upstream" *> $null
 
     # Get modified ASIM Parser files along with their status
-    $modifiedFilesStatus = Invoke-Expression "git diff --name-status upstream/master -- $($PSScriptRoot)/../../../Parsers/"
+    $modifiedFilesStatus = Invoke-Expression "git diff --name-status upstream/main -- $($PSScriptRoot)/../../../Parsers/"
     # Split the output into lines
     $modifiedFilesStatusLines = $modifiedFilesStatus -split "`n"
     # Initialize an empty array to store the file names and their status
