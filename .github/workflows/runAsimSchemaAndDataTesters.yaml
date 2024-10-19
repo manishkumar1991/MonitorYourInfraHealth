@@ -50,8 +50,8 @@ jobs:
               pip install tabulate
       - name: Run ASim parsers template validations python script
         run: |
-              filePath=".script/tests/asimParsersTest/VerifyASimParserTemplate.py"
-              url="https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.script/tests/asimParsersTest/VerifyASimParserTemplate.py" 
+              filePath=".scripts/tests/asimParsersTest/VerifyASimParserTemplate.py"
+              url="https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.scripts/tests/asimParsersTest/VerifyASimParserTemplate.py" 
               # Check if file exists and delete if it does
               if [ -f "$filePath" ]; then
                 rm -f "$filePath"
@@ -158,8 +158,8 @@ jobs:
         uses: azure/powershell@v2
         with:
           inlineScript: |
-            filePath = ".script/tests/asimParsersTest/runAsimTesters.ps1"
-            url = "https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.script/tests/asimParsersTest/runAsimTesters.ps1"
+            filePath = ".scripts/tests/asimParsersTest/runAsimTesters.ps1"
+            url = "https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.scripts/tests/asimParsersTest/runAsimTesters.ps1"
             # Check if file exists and delete if it does
             if (Test-Path $filePath) {
               Remove-Item $filePath -Force
@@ -168,8 +168,8 @@ jobs:
             Write-Host "Downloading script from the main: $url"
             Invoke-WebRequest -Uri $url -OutFile $filePath
             # download the convertYamlToObject.ps1 script form main
-            #$filePath_convert_yaml = ".script/tests/asimParsersTest/convertYamlToObject.ps1"
-            #$url_convert_yaml = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.script/tests/asimParsersTest/convertYamlToObject.ps1"
+            #$filePath_convert_yaml = ".scripts/tests/asimParsersTest/convertYamlToObject.ps1"
+            #$url_convert_yaml = "https://raw.githubusercontent.com/Azure/Azure-Sentinel/main/.scripts/tests/asimParsersTest/convertYamlToObject.ps1"
             # Check if file exists and delete if it does
             #if (Test-Path $filePath_convert_yaml) {
             #  Remove-Item $filePath_convert_yaml -Force
@@ -225,8 +225,8 @@ jobs:
           allow-no-subscriptions: true
       - name: Run ASim parsers filtering tests python script
         run: |
-          filePath=".script/tests/asimParsersTest/ASimFilteringTest.py"
-          url="https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.script/tests/asimParsersTest/ASimFilteringTest.py"
+          filePath=".scripts/tests/asimParsersTest/ASimFilteringTest.py"
+          url="https://raw.githubusercontent.com/manishkumar1991/MonitorYourInfraHealth/main/.scripts/tests/asimParsersTest/ASimFilteringTest.py"
           # Check if file exists and delete if it does
           if [ -f "$filePath" ]; then
             rm -f "$filePath"
