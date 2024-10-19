@@ -21,7 +21,7 @@ WORKSPACE_ID = "c64eb659-e5d8-4727-a9cd-ea4a085138e6"
 TIME_SPAN_IN_DAYS = 7
 
 # exclusion_file_path refers to the CSV file path containing a list of parsers. Despite failing tests, these parsers will not cause the overall workflow to fail
-exclusion_file_path = '.script/tests/asimParsersTest/ExclusionListForASimTests.csv'
+exclusion_file_path = '.scripts/tests/asimParsersTest/ExclusionListForASimTests.csv'
 
 # Sentinel Repo URL
 SentinelRepoUrl = f"https://github.com/manishkumar1991/MonitorYourInfraHealth.git"
