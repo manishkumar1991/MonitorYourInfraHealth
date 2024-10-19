@@ -307,11 +307,13 @@ def print_results_table(results):
 def check_test_failures(results, parser):
     if any(result[-1] == f'{RED}Fail{RESET}' for result in results):
         print("::error::Some tests failed for Parser. Please check the results above.")
-    exclusion_list = read_exclusion_list_from_csv()
-    if parser.get('EquivalentBuiltInParser') in exclusion_list:
-        print(f"::warning::The parser {parser.get('EquivalentBuiltInParser')} is listed in the exclusions file. Therefore, this workflow run will not fail because of it. To allow this parser to cause the workflow to fail, please remove its name from the exclusions list file located at: {parser_exclusion_file_path}")
+        exclusion_list = read_exclusion_list_from_csv()
+        if parser.get('EquivalentBuiltInParser') in exclusion_list:
+            print(f"::warning::The parser {parser.get('EquivalentBuiltInParser')} is listed in the exclusions file. Therefore, this workflow run will not fail because of it. To allow this parser to cause the workflow to fail, please remove its name from the exclusions list file located at: {parser_exclusion_file_path}")
+        else:
+            exit(1)
     else:
-        exit(1)
+        print(f"{GREEN}All tests passed for Parser.{RESET}")
 
 def check_parser_found(asim_parser,parser_url):
     if asim_parser is None:
