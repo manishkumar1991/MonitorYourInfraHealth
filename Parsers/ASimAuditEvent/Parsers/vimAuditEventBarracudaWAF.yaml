@@ -159,7 +159,7 @@ ParserQuery: |
                 Dvc = UnitName_s,
                 DvcIpAddr = HostIP_s,
                 NewValue = NewValue_s,
-                //SrcIpAddr = LoginIP_s,
+                SrcIpAddr = LoginIP_s,
                 EventMessage = EventMessage_s,
                 OldValue = OldValue_s,
                 DvcHostname = host_s,
