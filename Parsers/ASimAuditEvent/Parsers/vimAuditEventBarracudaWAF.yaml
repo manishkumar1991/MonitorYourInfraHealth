@@ -150,8 +150,8 @@ ParserQuery: |
             | lookup SeverityLookup on severity
             | lookup ObjectTypeLookup on ObjectType_s
             | extend
-                EventSchema = "AuditEvent",
-                EventSchemaVersion = "0.1.0",
+                //EventSchema = "AuditEvent",
+                //EventSchemaVersion = "0.1.0",
                 EventVendor = "Barracuda",
                 EventProduct = "WAF",
                 EventCount = toint(1)
@@ -159,17 +159,17 @@ ParserQuery: |
                 Dvc = UnitName_s,
                 DvcIpAddr = HostIP_s,
                 NewValue = NewValue_s,
-                SrcIpAddr = LoginIP_s,
+                //SrcIpAddr = LoginIP_s,
                 EventMessage = EventMessage_s,
                 OldValue = OldValue_s,
                 DvcHostname = host_s,
-                ActorUsername = AdminName_s,
-                Object = ObjectName_s,
+                //ActorUsername = AdminName_s,
+                //Object = ObjectName_s,
                 EventStartTime = iff(isnotempty(TimeTaken_d), unixtime_milliseconds_todatetime(tolong(DeviceReceiptTime_s)-tolong(TimeTaken_d)), unixtime_milliseconds_todatetime(tolong(DeviceReceiptTime_s)))
             | extend
                 Src = SrcIpAddr,
-                ActorUsernameType = iff(isnotempty(ActorUsername), "Simple", ""),
-                ActorUserType = iff(isnotempty(ActorUsername), "Admin", ""),
+                //ActorUsernameType = iff(isnotempty(ActorUsername), "Simple", ""),
+                //ActorUserType = iff(isnotempty(ActorUsername), "Admin", ""),
                 User = ActorUsername,
                 Value = NewValue,
                 EventEndTime = EventStartTime
