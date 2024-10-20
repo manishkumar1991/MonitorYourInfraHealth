@@ -150,8 +150,8 @@ ParserQuery: |
             | lookup SeverityLookup on severity
             | lookup ObjectTypeLookup on ObjectType_s
             | extend
-                EventSchema = "AuditEvent",
-                EventSchemaVersion = "0.1.0",
+                //EventSchema = "AuditEvent",
+                //EventSchemaVersion = "0.1.0",
                 EventVendor = "Barracuda",
                 EventProduct = "WAF",
                 EventCount = toint(1)
