@@ -13,6 +13,9 @@ $ParserExclusionsFilePath ="$($PSScriptRoot)/ExclusionListForASimTests.csv"
 # Sentinel repository URL
 $SentinelRepoUrl = "https://github.com/manishkumar1991/MonitorYourInfraHealth.git"
 
+# Initialize a global variable to store error status
+$global:hasErrors = $false
+
 Class Parser {
     [string] $Name
     [string] $OriginalQuery
@@ -155,7 +158,7 @@ function invokeAsimTester([string] $test, [string] $name, [string] $kind) {
                 elseif ($Errorcount -gt 0) {
                     $FinalMessage = "'$name' '$kind' - test failed with $Errorcount error(s):"
                     Write-Host "::error:: $FinalMessage"
-                    $hasErrors = $true
+                    $global:hasErrors = $true
                     #throw "Test failed with errors. Please fix the errors and try again." # Commented out to allow the script to continue running
                 } else {
                     $FinalMessage = "'$name' '$kind' - test completed successfully with no error."
@@ -168,7 +171,7 @@ function invokeAsimTester([string] $test, [string] $name, [string] $kind) {
     } catch {
         Write-Host "::error::  -- $_"
         Write-Host "::error::     $(((Get-Error -Newest 1)?.Exception)?.Response?.Content)"
-        $hasErrors = $true
+        $global:hasErrors = $true
         #throw $_ # Commented out to allow the script to continue running
     }
 }
@@ -202,6 +205,7 @@ function IgnoreValidationForASIMParsers() {
 run
 
 # Exit with error code if there are any errors
-if ($hasErrors) {
+if ($global:hasErrors) {
+    Write-Host "::error:: There were errors during the tests. Please fix the errors and try again."
     exit 1
 }
