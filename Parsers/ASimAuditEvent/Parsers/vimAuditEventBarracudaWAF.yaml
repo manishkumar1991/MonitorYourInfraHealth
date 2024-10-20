@@ -163,7 +163,7 @@ ParserQuery: |
                 EventMessage = EventMessage_s,
                 OldValue = OldValue_s,
                 DvcHostname = host_s,
-                //ActorUsername = AdminName_s,
+                ActorUsername = AdminName_s,
                 //Object = ObjectName_s,
                 EventStartTime = iff(isnotempty(TimeTaken_d), unixtime_milliseconds_todatetime(tolong(DeviceReceiptTime_s)-tolong(TimeTaken_d)), unixtime_milliseconds_todatetime(tolong(DeviceReceiptTime_s)))
             | extend
