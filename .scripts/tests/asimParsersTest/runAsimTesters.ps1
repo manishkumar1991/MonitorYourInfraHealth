@@ -13,9 +13,6 @@ $ParserExclusionsFilePath ="$($PSScriptRoot)/ExclusionListForASimTests.csv"
 # Sentinel repository URL
 $SentinelRepoUrl = "https://github.com/manishkumar1991/MonitorYourInfraHealth.git"
 
-# Initialize a global variable to store error status
-$global:hasErrors = $false
-
 Class Parser {
     [string] $Name
     [string] $OriginalQuery
@@ -158,8 +155,7 @@ function invokeAsimTester([string] $test, [string] $name, [string] $kind) {
                 elseif ($Errorcount -gt 0) {
                     $FinalMessage = "'$name' '$kind' - test failed with $Errorcount error(s):"
                     Write-Host "::error:: $FinalMessage"
-                    $global:hasErrors = $true
-                    #throw "Test failed with errors. Please fix the errors and try again." # Commented out to allow the script to continue running
+                    throw "Test failed with errors. Please fix the errors and try again." # Commented out to allow the script to continue running
                 } else {
                     $FinalMessage = "'$name' '$kind' - test completed successfully with no error."
                     Write-Host "${green}$FinalMessage${reset}"
@@ -171,8 +167,7 @@ function invokeAsimTester([string] $test, [string] $name, [string] $kind) {
     } catch {
         Write-Host "::error::  -- $_"
         Write-Host "::error::     $(((Get-Error -Newest 1)?.Exception)?.Response?.Content)"
-        $global:hasErrors = $true
-        #throw $_ # Commented out to allow the script to continue running
+        throw $_ # Commented out to allow the script to continue running
     }
 }
 
@@ -203,9 +198,3 @@ function IgnoreValidationForASIMParsers() {
 
 # Call the run function. This is the entry point of the script
 run
-
-# Exit with error code if there are any errors
-if ($global:hasErrors) {
-    Write-Host "::error:: There were errors during the tests. Please fix the errors and try again."
-    exit 1
-}
