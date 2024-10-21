@@ -161,10 +161,7 @@ def get_schema_for_builtin(query_table):
         if each[0] in reserved_columns:
             continue
         elif each[0] in guid_columns:
-            schema.append({        
-            'name': each[0],
-            'type': "Guid",
-            })
+            continue
         elif each[3] == "bool":
             schema.append({        
             'name': each[0],
@@ -420,3 +417,5 @@ for file in parser_yaml_files:
     else:
         print(f"Table {table_name} is not supported for log ingestion")
         continue
+
+
