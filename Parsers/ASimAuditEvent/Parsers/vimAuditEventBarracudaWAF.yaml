@@ -135,8 +135,8 @@ ParserQuery: |
             | extend
                 Operation = CommandName_s,
                 EventResult = "Success"
-            | where (eventresult == "*" or EventResult =~ eventresult)
-                and (array_length(operation_has_any) == 0 or Operation has_any (operation_has_any))
+            //| where (eventresult == "*" or EventResult =~ eventresult)
+              | where (array_length(operation_has_any) == 0 or Operation has_any (operation_has_any))
                 and (array_length(newvalue_has_any) == 0 or NewValue_s has_any (newvalue_has_any))
             | parse trim(@'[^\w(")]+', EventMessage_s) with * "Reason=" Reason:string
             | extend Reason = trim(@'(")', Reason)
