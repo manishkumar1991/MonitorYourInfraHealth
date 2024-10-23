@@ -258,13 +258,13 @@ def extract_event_vendor_product(parser_query,parser_file):
 
     match = re.search(r'EventVendor\s*=\s*[\'"]([^\'"]+)[\'"]', parser_query)
     if match:
-        event_vendor = match.group(1).replace(" ", "")
+        event_vendor = match.group(1)
     else:
         print(f'EventVendor field not mapped in parser. Please map it in parser query.{parser_file}')
 
     match = re.search(r'EventProduct\s*=\s*[\'"]([^\'"]+)[\'"]', parser_query)
     if match:
-        event_product = match.group(1).replace(" ", "")
+        event_product = match.group(1)
     else:
         print(f'Event Product field not mapped in parser. Please map it in parser query.{parser_file}')
     return event_vendor, event_product ,schema_name   
