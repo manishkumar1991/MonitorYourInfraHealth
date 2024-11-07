@@ -311,3 +311,6 @@ RawData,6,"System.String",string
 Type,310,"System.String",string
 "_ResourceId",311,"System.String",string
 "_ItemId",312,"System.String",string
+"threatInfo_md5_g",313,"System.String",string
+"threatInfo_sha256_s",314,"System.String",string
+"agentDetectionInfo_agentLastLoggedInUpn_s",315,"System.String",string
