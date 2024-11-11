@@ -29,7 +29,7 @@ pickle_str = "gASVvgMAAAAAAACMGWdvb2dsZS5vYXV0aDIuY3JlZGVudGlhbHOUjAtDcmVkZW50aW
 pickle_string = base64.b64decode(pickle_str)
 connection_string = "DefaultEndpointsProtocol=https;AccountName=ProdWorkspace;AccountKey=0CLGKVW8Peq+VGBSwBaKjiKjvDfbNd7ulPMAf1taa7+lH7Bxm8KX/jJ5EA/OGrC5Kf/Eub81eq9d+AStpszESA==;EndpointSuffix=core.windows.net"
 logAnalyticsUri = "https://dac5fbbc-f2c9-4589-8fe5-abe35946b964.ods.opinsights.azure.com"
-
+curl --header 'SEC: 5427bbf6-f056-498f-b9a5-90d6c11b7b29' --location --request POST 'https://74.225.202.237/console/plugins/1106/app_proxy/api/use_case_explorer' --header 'Content-Type: application/json' --data-raw '{"filters":[{"name":"rule","type":"ATTRIBUTE","recursive":true,"matchCriteria":"PARTIAL","values":[true],"attributeName":"",valueType":"EXCLUSIVE_COMMON"}],"columns":["N","GR","RC","T","RO","EN","RE","CD","MD"]}'
 
 
 def build_signature(customer_id, shared_key, date, content_length, method, content_type, resource):
