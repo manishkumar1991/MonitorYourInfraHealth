@@ -3,7 +3,6 @@ import pickle
 from googleapiclient.discovery import build
 import json
 import base64
-import hashlib
 import hmac
 import requests
 from google_auth_oauthlib.flow import InstalledAppFlow
