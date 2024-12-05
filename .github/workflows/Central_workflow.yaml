@@ -1,21 +1,27 @@
-name: Triggered Workflow Example
+name: Workflow2 - Post Validation Tasks
 
 on:
   workflow_run:
-    workflows: [Workflow1]      # Name of the triggering workflow
-    types: 
-      - completed                     # Runs only when the workflow is completed
+    workflows: ["Workflow1"]      # Match the name of your main workflow
+    types:
+      - completed                 # Trigger only when Workflow1 is completed
     branches:
-      - main                          # Specifies the branch to watch (optional)
+      - main                      # Optional: Trigger only on the main branch
 
 jobs:
-  post_completion_job:
+  process_results:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        
-      - name: Run a task after main workflow
-        run: echo "Main workflow has completed! Running post-completion tasks."
+      - name: Download Workflow1 Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: workflow-1-results  # Match the artifact name from Workflow1
+          path: .
+
+      - name: Display Validation Results
+        run: cat result.txt         # Process or display the results from Workflow1
+
+      - name: Perform Additional Tasks
+        run: echo "Additional steps can be added here."
+
 
