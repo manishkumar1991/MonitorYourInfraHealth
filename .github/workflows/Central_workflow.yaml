@@ -1,20 +1,21 @@
-name: Combine and Comment Results
+name: Triggered Workflow Example
+
 on:
   workflow_run:
-    workflows: [Workflow1]
-    types:
-      - completed
+    workflows: [Workflow1]      # Name of the triggering workflow
+    types: 
+      - completed                     # Runs only when the workflow is completed
+    branches:
+      - main                          # Specifies the branch to watch (optional)
 
 jobs:
-  combine_results:
+  post_completion_job:
     runs-on: ubuntu-latest
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: ./results
 
-      - name: Combine Results
-        run: |
-          cat ./results/workflow-1-results/result.txt > combined.txt
-          echo "------" >> combined.txt
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Run a task after main workflow
+        run: echo "Main workflow has completed! Running post-completion tasks."
+
