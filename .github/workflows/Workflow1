@@ -1,0 +1,19 @@
+name: Workflow1
+on:
+ pull_request:
+    branches:
+      - main
+jobs:
+  validate_code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Code Checks
+        run: |
+          # Run your validation commands here
+          echo "Check results for Workflow 1" > result.txt
+
+      - name: Upload Result as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: workflow-1-results
+          path: result.txt
