@@ -1,0 +1,27 @@
+name: Combine and Comment Results
+on:
+  workflow_run:
+    workflows: ["Workflow1"]  # Names of existing workflows
+    types:
+      - completed
+
+jobs:
+  combine_results:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./results
+
+      - name: Combine Results
+        run: |
+          cat ./results/workflow-1-results/result.txt > combined.txt
+          echo "------" >> combined.txt
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: combined.txt
+          token: ${{ secrets.GITHUB_TOKEN }}
