@@ -11,3 +11,15 @@ jobs:
     steps:
       - name: Perform Additional Tasks
         run: echo "Additional steps can be added here."
+      - name: Generate Markdown Report
+        run: |
+          echo "### 🚀 **Code Validation Results** 🚀" > comment.md
+          echo "" >> comment.md
+          echo "| Workflow Name | Status | Details |" >> comment.md
+          echo "|---------------|--------|---------|" >> comment.md  
+      - name: Post Comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: comment.md
+          token: ${{ secrets.GITHUB_TOKEN }}  
