@@ -18,10 +18,3 @@ jobs:
         run: |
           cat ./results/workflow-1-results/result.txt > combined.txt
           echo "------" >> combined.txt
-
-      - name: Comment on PR
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body-file: combined.txt
-          token: ${{ secrets.GITHUB_TOKEN }}
