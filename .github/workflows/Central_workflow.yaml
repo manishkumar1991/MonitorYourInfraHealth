@@ -1,10 +1,9 @@
 name: Combine and Comment Results
 on:
   workflow_run:
-    workflows: 
-        - "Workflow1"
+    workflows: [Workflow1]
     types:
-        - completed
+      - completed
 
 jobs:
   combine_results:
