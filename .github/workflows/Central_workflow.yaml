@@ -5,6 +5,10 @@ on:
     types:
       - completed                 # Trigger only when Workflow1 is completed
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   process_results:
     runs-on: ubuntu-latest
