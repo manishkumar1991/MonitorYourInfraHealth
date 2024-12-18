@@ -9,17 +9,28 @@ jobs:
   process_results:
     runs-on: ubuntu-latest
     steps:
+      - name: Download Artifacts from Workflow1
+        uses: actions/download-artifact@v3
+        with:
+          name: workflow-1-artifacts
+
+      - name: Read PR Number
+        id: read-pr-number
+        run: echo "PR_NUMBER=$(cat pr_number.txt)" >> $GITHUB_ENV
+
       - name: Perform Additional Tasks
         run: echo "Additional steps can be added here."
+
       - name: Generate Markdown Report
         run: |
           echo "### 🚀 **Code Validation Results** 🚀" > comment.md
           echo "" >> comment.md
           echo "| Workflow Name | Status | Details |" >> comment.md
           echo "|---------------|--------|---------|" >> comment.md  
+
       - name: Post Comment
         uses: peter-evans/create-or-update-comment@v3
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ env.PR_NUMBER }}
           body-path: comment.md
-          token: ${{ secrets.GITHUB_TOKEN }}  
+          token: ${{ secrets.GITHUB_TOKEN }}
