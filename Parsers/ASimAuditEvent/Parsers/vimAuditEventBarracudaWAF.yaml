@@ -1,6 +1,6 @@
 Parser:
   Title: Audit Event ASIM parser for Barracuda WAF
-  Version: '0.2.1'
+  Version: '0.2.2'
   LastUpdated: Jun 12, 2024
 Product:
   Name: Barracuda WAF
@@ -152,8 +152,6 @@ ParserQuery: |
             | extend
                 EventSchema = "AuditEvent",
                 EventSchemaVersion = "0.1.0",
-                EventVendor = "Barracuda",
-                EventProduct = "WAF",
                 EventCount = toint(1)
             | extend
                 Dvc = UnitName_s,
