@@ -11,4 +11,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments -f body="First Comment [WorkflowCommentTag]"
+          gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments -f body="[WorkflowCommentTag]"
