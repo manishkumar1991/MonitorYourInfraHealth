@@ -1,11 +1,14 @@
 name: Workflow1
 on:
- pull_request:
+  pull_request:
     branches:
       - main
 jobs:
-  validate_code:
+  create_comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Write PR Number to File
-        run: echo "${{ github.event.pull_request.number }}" > pr_number.txt
+      - name: Create Comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments -f body="First Comment\n[WorkflowCommentTag]"
