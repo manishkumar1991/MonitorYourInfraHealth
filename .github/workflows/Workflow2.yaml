@@ -1,11 +1,25 @@
 name: Workflow2
 on:
- pull_request:
+  pull_request:
     branches:
       - main
 jobs:
-  validate_code:
+  append_comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Write PR Number to File
-        run: echo "${{ github.event.pull_request.number }}" > pr_number2.txt
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Find and Append to Comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMENT_ID=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments --paginate | jq -r '.[] | select(.body | contains("[WorkflowCommentTag]")) | .id')   
+          if [ -n "$COMMENT_ID" ]; then
+            CURRENT_BODY=$(gh api repos/${{ github.repository }}/issues/comments/$COMMENT_ID | jq -r .body)
+            UPDATED_BODY="${CURRENT_BODY}\nSecond Comment"
+            gh api repos/${{ github.repository }}/issues/comments/$COMMENT_ID -X PATCH -f body="$UPDATED_BODY"
+          else
+            echo "No comment with the tag '[WorkflowCommentTag]' found. Exiting."
+          fi
