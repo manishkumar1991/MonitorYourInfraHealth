@@ -22,3 +22,8 @@ jobs:
           path: |
             result.txt
             pr_number.txt
+
+      - name: call second reusable workflow
+        uses: manishkumar1991/MonitorYourInfraHealth/.github/workflows/Central_workflow.yaml@main
+        with:
+          PR_Number: ${{ github.event.pull_request.number }}         
