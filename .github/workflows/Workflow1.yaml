@@ -9,21 +9,3 @@ jobs:
     steps:
       - name: Write PR Number to File
         run: echo "${{ github.event.pull_request.number }}" > pr_number.txt
-
-      - name: Run Code Checks
-        run: |
-          # Run your validation commands here
-          echo "Check results for Workflow 1" > result.txt
-
-      - name: Upload Results and PR Number as Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: workflow-1-artifacts
-          path: |
-            result.txt
-            pr_number.txt
-            
-  resuable_job:
-        uses: manishkumar1991/MonitorYourInfraHealth/.github/workflows/Central_workflow.yaml@main
-        with:
-          PR_Number: ${{ github.event.pull_request.number }}         
