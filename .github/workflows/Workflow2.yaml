@@ -18,7 +18,8 @@ jobs:
           COMMENT_ID=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments --paginate | jq -r '.[] | select(.body | contains("[WorkflowCommentTag]")) | .id')   
           if [ -n "$COMMENT_ID" ]; then
             CURRENT_BODY=$(gh api repos/${{ github.repository }}/issues/comments/$COMMENT_ID | jq -r .body)
-            UPDATED_BODY="${CURRENT_BODY}\nSecond Comment"
+            UPDATED_BODY="${CURRENT_BODY}
+            Second Comment"
             gh api repos/${{ github.repository }}/issues/comments/$COMMENT_ID -X PATCH -f body="$UPDATED_BODY"
           else
             echo "No comment with the tag '[WorkflowCommentTag]' found. Exiting."
