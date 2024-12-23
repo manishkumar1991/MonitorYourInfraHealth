@@ -1,0 +1,11 @@
+name: Workflow2
+on:
+ pull_request:
+    branches:
+      - main
+jobs:
+  validate_code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write PR Number to File
+        run: echo "${{ github.event.pull_request.number }}" > pr_number2.txt
