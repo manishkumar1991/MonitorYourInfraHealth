@@ -15,7 +15,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          COMMENT_ID=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments --paginate | jq -r '.[] | select(.body | contains("[WorkflowCommentTag]")) | .id')   
+          COMMENT_ID=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments --paginate | jq -r '.[-1] | select(.body | contains("[WorkflowCommentTag]")) | .id')   
           if [ -n "$COMMENT_ID" ]; then
             CURRENT_BODY=$(gh api repos/${{ github.repository }}/issues/comments/$COMMENT_ID | jq -r .body)
             UPDATED_BODY="${CURRENT_BODY}
