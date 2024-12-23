@@ -1,9 +1,10 @@
 name: Workflow2 - Post Validation Tasks
 on:
-  workflow_run:
-    workflows: ["Workflow1"]      # Match the name of your main workflow
-    types:
-      - completed                 # Trigger only when Workflow1 is completed
+  workflow_call:
+    inputs:
+      PR_Number:
+        required: True
+        type: string
 
 permissions:
   id-token: write
@@ -13,14 +14,6 @@ jobs:
   process_results:
     runs-on: ubuntu-latest
     steps:
-      - name: Download Artifacts from Workflow1
-        uses: actions/download-artifact@v3
-        with:
-          name: workflow-1-artifacts
-
-      - name: Read PR Number
-        id: read-pr-number
-        run: echo "PR_NUMBER=$(cat pr_number.txt)" >> $GITHUB_ENV
 
       - name: Perform Additional Tasks
         run: echo "Additional steps can be added here."
@@ -35,6 +28,6 @@ jobs:
       - name: Post Comment
         uses: peter-evans/create-or-update-comment@v3
         with:
-          issue-number: ${{ env.PR_NUMBER }}
+          issue-number: ${{ inputs.PR_Number }}
           body-path: comment.md
           token: ${{ secrets.GITHUB_TOKEN }}
