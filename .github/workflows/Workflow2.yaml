@@ -7,20 +7,24 @@ jobs:
   append_comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Find and Append to Comment
+      - name: Find and Append to Latest Comment
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          COMMENT_ID=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments --paginate | jq -r '.[-1] | select(.body | contains("[WorkflowCommentTag]")) | .id')   
-          if [ -n "$COMMENT_ID" ]; then
-            CURRENT_BODY=$(gh api repos/${{ github.repository }}/issues/comments/$COMMENT_ID | jq -r .body)
-            UPDATED_BODY="${CURRENT_BODY}
+          # Fetch the latest comment
+          LATEST_COMMENT=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments --paginate | jq -c '.[-1]')
+          
+          # Extract comment ID and body
+          COMMENT_ID=$(echo "$LATEST_COMMENT" | jq -r .id)
+          COMMENT_BODY=$(echo "$LATEST_COMMENT" | jq -r .body)
+
+          # Check if the latest comment contains the tag
+          if [[ "$COMMENT_BODY" == *"[WorkflowCommentTag]"* ]]; then
+            # Append new content to the comment
+            UPDATED_BODY="${COMMENT_BODY}
             Second Comment"
             gh api repos/${{ github.repository }}/issues/comments/$COMMENT_ID -X PATCH -f body="$UPDATED_BODY"
           else
-            echo "No comment with the tag '[WorkflowCommentTag]' found. Exiting."
+            echo "The latest comment does not contain the tag '[WorkflowCommentTag]'. Exiting."
           fi
+
