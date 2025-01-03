@@ -1,0 +1,17 @@
+name: combine
+on:
+  workflow_run:
+    workflows:
+      - Workflow1
+      - Workflow2
+    types:
+      - completed
+
+jobs:
+  print-run-ids:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Workflow Run IDs
+        run: |
+          echo "Workflow 1 Run ID: ${{ github.event.workflow_run.name == 'Workflow1' && github.event.workflow_run.id }}"
+          echo "Workflow 2 Run ID: ${{ github.event.workflow_run.name == 'Workflow2' && github.event.workflow_run.id }}"
