@@ -60,7 +60,8 @@ jobs:
               echo "Downloading script from the master: $url"
               curl -o "$filePath" "$url"
               # Execute the script
-              python "$filePath" 
+              # python "$filePath"
+              PYTHONPATH=/usr/lib/python3.9 python "$filePath"
   Run-ASim-Sample-Data-Ingest:
     needs: Run-ASim-TemplateValidation
     name: Run ASim Sample Data Ingestion
