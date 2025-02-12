@@ -34,5 +34,3 @@ For ingesting data into Microsoft Sentinel , We need few of the resources create
    
 12. When asked if you want to create the resources listed, type yes
 13. When the output from the script is displayed, save the resources parameters for later use.  
-
-## Actions supported by ThreatX Cloud custom connector
