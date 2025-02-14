@@ -50,7 +50,7 @@ resource "google_logging_project_sink" "sentinel-sink" {
   destination = "pubsub.googleapis.com/projects/${data.google_project.project.project_id}/topics/${var.topic-name}"
   depends_on = [google_pubsub_topic.sentinel-vpcflow-topic]
 
-  filter = "resource.type="gce_subnetwork" AND log_id("compute.googleapis.com/vpc_flows")"
+  filter = "resource.type=\"gce_subnetwork\" AND log_id(\"compute.googleapis.com/vpc_flows\")"
   unique_writer_identity = true
 }
 
@@ -60,7 +60,7 @@ resource "google_logging_organization_sink" "sentinel-organization-sink" {
   org_id = var.organization-id
   destination = "pubsub.googleapis.com/projects/${data.google_project.project.project_id}/topics/${var.topic-name}"
 
-  filter = "resource.type="gce_subnetwork" AND log_id("compute.googleapis.com/vpc_flows")"
+  filter = "resource.type=\"gce_subnetwork\" AND log_id(\"compute.googleapis.com/vpc_flows\")"
   include_children = true
 }
 
