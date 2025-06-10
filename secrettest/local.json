@@ -1,0 +1,13 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=bluecyclepython;AccountKey=2QOhKt4OigH+x9Wh4ZBuqOL7WXgCAAU+fdiS4544wKR4+zcso5eIHXzfOKb6sQ5kM9eC+vJ9VR3Q+AStnRImX9==;EndpointSuffix=core.windows.net",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "GREYNOISE_KEY": "QQlNQhHvmYuRCSgPEk4zUf3qxyBJt4yIwxwm5CiKI3YL8piUvBKHiGAo9wFx8tEX",
+    "CLIENT_ID": "1e1b4f6a-2c84-4e0e-8488-412e21868b62",
+    "CLIENT_SECRET": "o~.8Q~7hVruMECN9C9o9wwQXbXjgrbLHAuWYSb8Y",
+    "TENANT_ID": "17cea101-dd9b-43d0-9d67-f028b6efc55f",
+    "WORKSPACE_ID": "c64eb659-e5d8-4727-a9cd-ea4a085138e6",
+    "GREYNOISE_CLASSIFICATIONS": "malicious,unknown"
+  }
+}
